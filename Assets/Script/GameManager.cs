@@ -3,6 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] UIManager uiManager;
+    [SerializeField] TileMapManager tileMapManager;
     [SerializeField] GameObject clearUI;
     [SerializeField] int endYear;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,10 +20,14 @@ public class GameManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Ÿ‚ÌŒƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
+    /// </summary>
     public void OnNextDateClick()
     {
         int money = Random.Range(-100, 100);
         uiManager.UpdateUI(money);
+        tileMapManager.UpdateTile();
     }
 
     void GameClear()
