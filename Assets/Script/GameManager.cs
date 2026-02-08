@@ -35,4 +35,8 @@ public class GameManager : MonoBehaviour
         clearUI.SetActive(true);
         uiManager.UpdateClearUI(Random.Range(100, 1000));
     }
+    private void OnDestroy()
+    {
+        uiManager.gameClear -= GameClear;
+    }
 }
