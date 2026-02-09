@@ -13,9 +13,9 @@ public class TileMapManager : MonoBehaviour
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
-    Dictionary<CropType, SO_CropDefinition> cropDefinition;
+    Dictionary<CropType, SO_CropDefinition> cropDefinitionsMap;
 
-    public event UnityAction<int> onHarvested;
+    public event UnityAction<int> OnHarvested;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -37,10 +37,10 @@ public class TileMapManager : MonoBehaviour
             }
         }
 
-        cropDefinition = new Dictionary<CropType, SO_CropDefinition>();
+        cropDefinitionsMap = new Dictionary<CropType, SO_CropDefinition>();
         foreach(var cropDef in cropDefinitions)
         {
-            cropDefinition[cropDef.cropType] = cropDef;
+            cropDefinitionsMap[cropDef.cropType] = cropDef;
         }
     }
 
@@ -81,7 +81,7 @@ public class TileMapManager : MonoBehaviour
         }
 
         // êAÇ¶ÇÈ
-        var def = cropDefinition[CropType.Wheat];
+        var def = cropDefinitionsMap[CropType.Wheat];
         cell.cropData = new CropData(def);
         fieldMap.SetTile(cellPos, def.cropTile);
         Debug.Log("êAÇ¶Ç‹ÇµÇΩ");
@@ -103,7 +103,7 @@ public class TileMapManager : MonoBehaviour
             if(cell.cropData.growthStage >= cell.cropData.so_CropDefinition.growMonths)
             {
                 Debug.Log(cell.cropData.so_CropDefinition.sellPrice);
-                onHarvested?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
+                OnHarvested?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
                 cell.cropData = null;
                 fieldMap.SetTile(cell.cellPos, groundTile);
                 Debug.Log("é˚änÇµÇ‹ÇµÇΩÅB");

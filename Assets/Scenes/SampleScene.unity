@@ -386,8 +386,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d38a67bf1cfe1de4fbd213e6eb57ae6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DateManager
-  yearText: {fileID: 1570212729}
-  monthText: {fileID: 1944987894}
 --- !u!1 &238328543
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,8 +549,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiManager: {fileID: 1670189157}
+  dateManager: {fileID: 186405601}
   tileMapManager: {fileID: 177130077}
-  clearUI: {fileID: 1105960890}
   endYear: 4
 --- !u!4 &253628020
 Transform:
@@ -1744,9 +1742,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 566a224c061864e4997827324b74eed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  dateManager: {fileID: 186405601}
+  yearText: {fileID: 1570212729}
+  monthText: {fileID: 1944987894}
   moneyText: {fileID: 1844830219}
   scoreText: {fileID: 487396340}
+  clearUI: {fileID: 1105960890}
 --- !u!1 &1807211519
 GameObject:
   m_ObjectHideFlags: 0

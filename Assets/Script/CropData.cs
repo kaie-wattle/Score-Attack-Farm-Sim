@@ -3,7 +3,9 @@ using UnityEngine;
 public enum CropType
 {
     None,
+    /// <summary> •Ä </summary>
     Rice,
+    /// <summary> ¬” </summary>
     Wheat
 }
 

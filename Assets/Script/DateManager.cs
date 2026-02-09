@@ -1,15 +1,14 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DateManager : MonoBehaviour
 {
-    [SerializeField] TMPro.TMP_Text yearText;
-    [SerializeField] TMPro.TMP_Text monthText;
-
     int year;
     int month;
     int endYear;
 
-
+    public event UnityAction<int, int> OnDateChenged;
     /// <summary>
     /// ‰Šú‰»
     /// </summary>
@@ -19,8 +18,7 @@ public class DateManager : MonoBehaviour
         year = 1;
         month = 4;
         this.endYear = endYear;
-        yearText.SetText(year + "”N–Ú");
-        monthText.SetText(month + "Œ");
+        OnDateChenged?.Invoke(year, month);
     }
 
     /// <summary>
@@ -40,8 +38,7 @@ public class DateManager : MonoBehaviour
         {
             ret = true;
         }
-        yearText.SetText(year + "”N–Ú");
-        monthText.SetText(month + "Œ");
+        OnDateChenged?.Invoke(year, month);
         return ret;
     }
 }

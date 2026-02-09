@@ -3,16 +3,17 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] UIManager uiManager;
+    [SerializeField] DateManager dateManager;
     [SerializeField] TileMapManager tileMapManager;
-    [SerializeField] GameObject clearUI;
     [SerializeField] int endYear;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        uiManager.Initialize(endYear);
-        uiManager.gameClear += GameClear;
-        tileMapManager.onHarvested += OnHarvested;
-        clearUI.SetActive(false);
+        dateManager.OnDateChenged += uiManager.UpdateDate;
+        tileMapManager.OnHarvested += Harvested;
+        uiManager.Initialize();
+        dateManager.Initialize(endYear);
     }
 
     // Update is called once per frame
@@ -26,15 +27,21 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnNextDateClick()
     {
-        uiManager.UpdateDate();
+        bool isEnd = dateManager.AdvanceToNextTime();
+        
         tileMapManager.UpdateTile();
+        if(isEnd)
+        {
+            GameClear();
+        }
+        
     }
 
     /// <summary>
     /// ŽûŠn‚³‚ê‚½
     /// </summary>
     /// <param name="income"></param>
-    void OnHarvested(int income)
+    void Harvested(int income)
     {
         uiManager.UpdateMoney(income);
     }
@@ -44,13 +51,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void GameClear()
     {
-        clearUI.SetActive(true);
+        // TODO:ƒXƒRƒA‚Í‰¼
         uiManager.UpdateClearUI(Random.Range(100, 1000));
     }
 
     private void OnDestroy()
     {
-        uiManager.gameClear -= GameClear;
-        tileMapManager.onHarvested -= OnHarvested;
+        dateManager.OnDateChenged -= uiManager.UpdateDate;
+        tileMapManager.OnHarvested -= Harvested;
     }
 }
