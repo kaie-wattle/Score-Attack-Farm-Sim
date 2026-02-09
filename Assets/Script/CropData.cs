@@ -3,18 +3,23 @@ using UnityEngine;
 public enum CropType
 {
     None,
-    Carrot,
+    Rice,
+    Wheat
 }
 
+/// <summary>
+/// çÏï®èÓïÒ
+/// </summary>
 [System.Serializable]
 public class CropData
 {
-    public CropType cropType;
+    public SO_CropDefinition so_CropDefinition;
+    /// <summary> ê¨í∑íiäK </summary>
     public int growthStage;
 
-    public CropData(CropType cropType)
+    public CropData(SO_CropDefinition cropDefinition)
     {
-        this.cropType = cropType;
+        so_CropDefinition = cropDefinition;
         growthStage = 0;
     }
 }

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     {
         uiManager.Initialize(endYear);
         uiManager.gameClear += GameClear;
+        tileMapManager.onHarvested += OnHarvested;
         clearUI.SetActive(false);
     }
 
@@ -25,18 +26,31 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnNextDateClick()
     {
-        int money = Random.Range(-100, 100);
-        uiManager.UpdateUI(money);
+        uiManager.UpdateDate();
         tileMapManager.UpdateTile();
     }
 
+    /// <summary>
+    /// ûŠn‚³‚ê‚½
+    /// </summary>
+    /// <param name="income"></param>
+    void OnHarvested(int income)
+    {
+        uiManager.UpdateMoney(income);
+    }
+
+    /// <summary>
+    /// ƒQ[ƒ€ƒNƒŠƒA
+    /// </summary>
     void GameClear()
     {
         clearUI.SetActive(true);
         uiManager.UpdateClearUI(Random.Range(100, 1000));
     }
+
     private void OnDestroy()
     {
         uiManager.gameClear -= GameClear;
+        tileMapManager.onHarvested -= OnHarvested;
     }
 }

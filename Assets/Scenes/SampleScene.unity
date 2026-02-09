@@ -334,7 +334,9 @@ MonoBehaviour:
   fieldMap: {fileID: 1352319022}
   glassTile: {fileID: 11400000, guid: 3fc513da98abc9b4c8f0976f16110201, type: 2}
   groundTile: {fileID: 11400000, guid: 3e2f05f7306ff3548b2b79b965f3e27b, type: 2}
-  cropsTile: {fileID: 11400000, guid: 29937b69f639e5f48b140eea5d976356, type: 2}
+  cropDefinitions:
+  - {fileID: 11400000, guid: 9c580b5c14f4ea8438be4631dd1b28de, type: 2}
+  - {fileID: 11400000, guid: 28e1f18dac6f9ae4988fd4c3b7343bbf, type: 2}
 --- !u!1 &186405599
 GameObject:
   m_ObjectHideFlags: 0

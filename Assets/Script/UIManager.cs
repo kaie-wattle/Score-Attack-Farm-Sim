@@ -21,15 +21,26 @@ public class UIManager : MonoBehaviour
         scoreText.SetText("Score:" + 0);
     }
 
-    public void UpdateUI(int money)
+    /// <summary>
+    /// 日付更新
+    /// </summary>
+    public void UpdateDate()
     {
-
-        currentMoney += money;
-        moneyText.SetText(currentMoney.ToString());
         if (dateManager.AdvanceToNextTime())
         {
             gameClear?.Invoke();
         }
+    }
+
+    /// <summary>
+    /// 所持金更新
+    /// </summary>
+    /// <param name="money"></param>
+    public void UpdateMoney(int money)
+    {
+
+        currentMoney += money;
+        moneyText.SetText(currentMoney.ToString());
     }
 
     public void UpdateClearUI(int score)

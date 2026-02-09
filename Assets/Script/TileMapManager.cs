@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
@@ -8,15 +9,19 @@ public class TileMapManager : MonoBehaviour
     [SerializeField] Tilemap fieldMap;
     [SerializeField] Tile glassTile; // 未使用 拡張可能エリアとして使用予定
     [SerializeField] Tile groundTile;
-    [SerializeField] Tile cropsTile;
+    [SerializeField] List<SO_CropDefinition> cropDefinitions;
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
+    Dictionary<CropType, SO_CropDefinition> cropDefinition;
+
+    public event UnityAction<int> onHarvested;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mainCamera = Camera.main;
+        // 各セルの作物情報を初期化する。
         fieldCells = new Dictionary<Vector3Int, FieldCellData>();
         var bounds = fieldMap.cellBounds;
 
@@ -30,6 +35,12 @@ public class TileMapManager : MonoBehaviour
                     fieldCells[cellPos] = new FieldCellData(cellPos);
                 }
             }
+        }
+
+        cropDefinition = new Dictionary<CropType, SO_CropDefinition>();
+        foreach(var cropDef in cropDefinitions)
+        {
+            cropDefinition[cropDef.cropType] = cropDef;
         }
     }
 
@@ -70,8 +81,9 @@ public class TileMapManager : MonoBehaviour
         }
 
         // 植える
-        cell.cropData = new CropData(CropType.Carrot);
-        fieldMap.SetTile(cellPos, cropsTile);
+        var def = cropDefinition[CropType.Wheat];
+        cell.cropData = new CropData(def);
+        fieldMap.SetTile(cellPos, def.cropTile);
         Debug.Log("植えました");
     }
 
@@ -88,8 +100,10 @@ public class TileMapManager : MonoBehaviour
             }
 
             cell.cropData.growthStage++;
-            if(cell.cropData.growthStage >= 1)
+            if(cell.cropData.growthStage >= cell.cropData.so_CropDefinition.growMonths)
             {
+                Debug.Log(cell.cropData.so_CropDefinition.sellPrice);
+                onHarvested?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
                 cell.cropData = null;
                 fieldMap.SetTile(cell.cellPos, groundTile);
                 Debug.Log("収穫しました。");
