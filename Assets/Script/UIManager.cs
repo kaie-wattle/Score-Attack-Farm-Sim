@@ -9,12 +9,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMPro.TMP_Text scoreText;
     [SerializeField] GameObject clearUI;
 
-    int currentMoney;
-
     public void Initialize()
     {
-        currentMoney = 10000;
-        moneyText.SetText(currentMoney.ToString());
         scoreText.SetText("Score:" + 0);
         clearUI.SetActive(false);
     }
@@ -34,9 +30,7 @@ public class UIManager : MonoBehaviour
     /// <param name="money">‚¨‹à</param>
     public void UpdateMoney(int money)
     {
-
-        currentMoney += money;
-        moneyText.SetText(currentMoney.ToString());
+        moneyText.SetText(money.ToString());
     }
 
     /// <summary>

@@ -5,15 +5,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] UIManager uiManager;
     [SerializeField] DateManager dateManager;
     [SerializeField] TileMapManager tileMapManager;
+    [SerializeField] MoneyManager moneyManager;
+    [SerializeField] MaintenanceManager maintenanceManager;
+    [SerializeField] ScoreManager scoreManager;
     [SerializeField] int endYear;
+    [SerializeField] int initializeMoney = 100000;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnHarvested += Harvested;
+        moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
+
         uiManager.Initialize();
-        dateManager.Initialize(endYear);
+        dateManager.Initialize();
+        moneyManager.Initialize(initializeMoney);
     }
 
     // Update is called once per frame
@@ -27,23 +34,41 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnNextDateClick()
     {
-        bool isEnd = dateManager.AdvanceToNextTime();
+        // 時間を進める
+        dateManager.AdvanceMonth();
         
+        // 収穫
         tileMapManager.UpdateTile();
-        if(isEnd)
+
+        // 維持費計算
+        int seedCount = 10; // 仮
+        int cost = maintenanceManager.CalcCost(tileMapManager.GetFieldCount(), tileMapManager.GetPlantedCount(), seedCount);
+
+        // 支払い
+        moneyManager.AddMoney(-cost);
+
+        if(IsGameClear())
         {
             GameClear();
         }
-        
     }
 
     /// <summary>
     /// 収穫された
     /// </summary>
-    /// <param name="income"></param>
+    /// <param name="income">収入</param>
     void Harvested(int income)
     {
-        uiManager.UpdateMoney(income);
+        moneyManager.AddMoney(income);
+    }
+
+    /// <summary>
+    /// ゲームクリア判定
+    /// </summary>
+    /// <returns>true:ゲームクリア false:未クリア</returns>
+    bool IsGameClear()
+    {
+        return dateManager.Year >= endYear && dateManager.Month >= 4;
     }
 
     /// <summary>
@@ -51,13 +76,20 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void GameClear()
     {
-        // TODO:スコアは仮
-        uiManager.UpdateClearUI(Random.Range(100, 1000));
+        int score = scoreManager.CalcScore(
+            moneyManager.CurrentMoney,
+            tileMapManager.GetFieldCount(),
+            0,
+            moneyManager.IsNeverDebt,
+            true
+            );
+        uiManager.UpdateClearUI(score);
     }
 
     private void OnDestroy()
     {
         dateManager.OnDateChenged -= uiManager.UpdateDate;
         tileMapManager.OnHarvested -= Harvested;
+        moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
     }
 }

@@ -110,4 +110,20 @@ public class TileMapManager : MonoBehaviour
             }
         }
     }
+
+    public int GetFieldCount()
+    {
+        return fieldCells.Count;
+    }
+
+    public int GetPlantedCount()
+    {
+        int ret = 0;
+        foreach(var cell in fieldCells.Values)
+        {
+            if (cell.cropData != null)
+                ret++;
+        }
+        return ret;
+    }
 }

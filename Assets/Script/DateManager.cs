@@ -6,39 +6,33 @@ public class DateManager : MonoBehaviour
 {
     int year;
     int month;
-    int endYear;
+
+    public int Year => year;
+    public int Month => month;
 
     public event UnityAction<int, int> OnDateChenged;
     /// <summary>
     /// 初期化
     /// </summary>
     /// <param name="endYear">ゲーム終了年</param>
-    public void Initialize(int endYear)
+    public void Initialize()
     {
         year = 1;
         month = 4;
-        this.endYear = endYear;
         OnDateChenged?.Invoke(year, month);
     }
 
     /// <summary>
     /// 日付を次の月に進める
     /// </summary>
-    /// <returns>終了年に到達したか</returns>
-    public bool AdvanceToNextTime()
+    public void AdvanceMonth()
     {
-        bool ret = false;
         month++;
-        if(month == 13)
+        if(month > 12)
         {
             month = 1;
             year++;
         }
-        if(year >= endYear && month >= 4)
-        {
-            ret = true;
-        }
         OnDateChenged?.Invoke(year, month);
-        return ret;
     }
 }
