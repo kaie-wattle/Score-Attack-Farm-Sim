@@ -1,3 +1,4 @@
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -76,13 +77,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void GameClear()
     {
-        int score = scoreManager.CalcScore(
-            moneyManager.CurrentMoney,
-            tileMapManager.GetFieldCount(),
-            0,
-            moneyManager.IsNeverDebt,
-            true
-            );
+        ScoreContext context = new ScoreContext
+        {
+            Money = moneyManager.CurrentMoney,
+            FieldCount = tileMapManager.GetFieldCount(),
+            LivestockArea = 0, // –¢ŽÀ‘•
+            IsNeverDebt = moneyManager.IsNeverDebt,
+            IsCropOnly = true // ‰¼
+        };
+        ScoreResult score = scoreManager.CalcScore(context);
         uiManager.UpdateClearUI(score);
     }
 

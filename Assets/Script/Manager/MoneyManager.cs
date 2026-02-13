@@ -14,6 +14,7 @@ public class MoneyManager : MonoBehaviour
     public void Initialize(int startMoney)
     {
         money = startMoney;
+        isNeverDebt = true;
         OnMoneyChanged?.Invoke(money);
     }
 
@@ -21,7 +22,7 @@ public class MoneyManager : MonoBehaviour
     {
         money += value;
 
-        if(money > 0)
+        if(money < 0)
             isNeverDebt = false;
 
         OnMoneyChanged?.Invoke(money);
