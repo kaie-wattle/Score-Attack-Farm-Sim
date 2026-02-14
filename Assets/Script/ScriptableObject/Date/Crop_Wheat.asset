@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70f0fd7711d0a584280dfa25fde8a0e0, type: 3}
-  m_Name: Rice_Crop Definition
+  m_Name: Crop_Wheat
   m_EditorClassIdentifier: Assembly-CSharp::SO_CropDefinition
-  cropType: 1
-  growMonths: 1
-  sellPrice: 100
-  cropTile: {fileID: 11400000, guid: 29937b69f639e5f48b140eea5d976356, type: 2}
+  cropType: 2
+  cropName: "\u5C0F\u9EA6"
+  growMonths: 2
+  sellPrice: 200
+  cropTile: {fileID: 11400000, guid: bcede4101c84028409abde06b6adcd0e, type: 2}

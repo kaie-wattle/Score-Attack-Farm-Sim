@@ -9,18 +9,35 @@ public class TileMapManager : MonoBehaviour
     [SerializeField] Tilemap fieldMap;
     [SerializeField] Tile glassTile; // 未使用 拡張可能エリアとして使用予定
     [SerializeField] Tile groundTile;
-    [SerializeField] List<SO_CropDefinition> cropDefinitions;
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
-    Dictionary<CropType, SO_CropDefinition> cropDefinitionsMap;
 
+    /// <summary> 収穫イベント </summary>
+    public event UnityAction<Vector3Int> OnPlanted;
+    /// <summary> 収穫イベント </summary>
     public event UnityAction<int> OnHarvested;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Initialize()
     {
         mainCamera = Camera.main;
+        InitField();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            ClickTile();
+        }
+    }
+
+    /// <summary>
+    /// 作物情報初期化
+    /// </summary>
+    void InitField()
+    {
         // 各セルの作物情報を初期化する。
         fieldCells = new Dictionary<Vector3Int, FieldCellData>();
         var bounds = fieldMap.cellBounds;
@@ -36,23 +53,7 @@ public class TileMapManager : MonoBehaviour
                 }
             }
         }
-
-        cropDefinitionsMap = new Dictionary<CropType, SO_CropDefinition>();
-        foreach(var cropDef in cropDefinitions)
-        {
-            cropDefinitionsMap[cropDef.cropType] = cropDef;
-        }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            ClickTile();
-        }
-    }
-
     /// <summary>
     /// タイルクリック処理
     /// </summary>
@@ -66,25 +67,8 @@ public class TileMapManager : MonoBehaviour
         var pos = Input.mousePosition;
         pos.z = 0;
         var cellPos = fieldMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
-        
-        if(!fieldCells.TryGetValue(cellPos,out var cell))
-        {
-            // 存在しないタイルをクリックした場合は処理しない
-            Debug.Log("タイルがない");
-            return;
-        }
 
-        if(cell.cropData != null)
-        {
-            Debug.Log("既に植えている");
-            return;
-        }
-
-        // 植える
-        var def = cropDefinitionsMap[CropType.Wheat];
-        cell.cropData = new CropData(def);
-        fieldMap.SetTile(cellPos, def.cropTile);
-        Debug.Log("植えました");
+        OnPlanted?.Invoke(cellPos);
     }
 
     /// <summary>
@@ -99,9 +83,11 @@ public class TileMapManager : MonoBehaviour
                 continue;
             }
 
+            // 全ての作物を1段階成長させる
             cell.cropData.growthStage++;
             if(cell.cropData.growthStage >= cell.cropData.so_CropDefinition.growMonths)
             {
+                // 成長しきったら収穫する
                 Debug.Log(cell.cropData.so_CropDefinition.sellPrice);
                 OnHarvested?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
                 cell.cropData = null;
@@ -111,11 +97,45 @@ public class TileMapManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 作物を植える
+    /// </summary>
+    /// <param name="cellPos">タイルの座標</param>
+    /// <param name="SelectCrop">選択されている作物</param>
+    public void Plant(Vector3Int cellPos, SO_CropDefinition SelectCrop)
+    {
+        if (!fieldCells.TryGetValue(cellPos, out var cell))
+        {
+            // 存在しないタイルをクリックした場合は処理しない
+            Debug.Log("タイルがない");
+            return;
+        }
+
+        if (cell.cropData != null)
+        {
+            Debug.Log("既に植えている");
+            return;
+        }
+
+        // 植える
+        cell.cropData = new CropData(SelectCrop);
+        fieldMap.SetTile(cellPos, SelectCrop.cropTile);
+        Debug.Log("植えました");
+    }
+
+    /// <summary>
+    /// 耕地面積を取得
+    /// </summary>
+    /// <returns>耕地面積</returns>
     public int GetFieldCount()
     {
         return fieldCells.Count;
     }
 
+    /// <summary>
+    /// 作物が植えられている耕地面積を取得
+    /// </summary>
+    /// <returns>作物が植えられている耕地面積</returns>
     public int GetPlantedCount()
     {
         int ret = 0;

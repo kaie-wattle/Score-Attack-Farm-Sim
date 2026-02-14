@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,13 +8,31 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMPro.TMP_Text monthText;
     [SerializeField] TMPro.TMP_Text moneyText;
     [SerializeField] GameObject clearUI;
+
+    [SerializeField] Transform cropButtonParent;
+    [SerializeField] CropButtonItem cropButtonItemPrefabs;
+    [SerializeField] List<SO_CropDefinition> cropDefinitions;
+
     [SerializeField] Transform scoreDetailParent;
     [SerializeField] ScoreDetailItem scoreDetailItemPrefab;
 
-    public void Initialize()
+    private GameManager gameManager;
+    private List<CropButtonItem> cropButtons = new List<CropButtonItem>();
+
+    public void Initialize(GameManager _gameManager)
     {
+        gameManager = _gameManager;
         ClearScoreDetails();
         clearUI.SetActive(false);
+        cropButtons.Clear();
+
+        foreach (var crop in cropDefinitions)
+        {
+            var button = Instantiate(cropButtonItemPrefabs, cropButtonParent);
+            button.SetCropButton(crop);
+            button.OnClikedEvent += _gameManager.SetSelectedCrop;
+            cropButtons.Add(button);
+        }
     }
 
     /// <summary>
@@ -77,5 +96,14 @@ public class UIManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var button in cropButtons)
+        {
+            button.OnClikedEvent -= gameManager.SetSelectedCrop;
+        }
+        cropButtons.Clear();
     }
 }

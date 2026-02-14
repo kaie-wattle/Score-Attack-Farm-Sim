@@ -399,7 +399,7 @@ GameObject:
   - component: {fileID: 238328546}
   - component: {fileID: 238328545}
   m_Layer: 5
-  m_Name: Button
+  m_Name: NextMonthButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30C6\u30B9\u30C8"
+  m_text: "\u6B21\u306E\u6708\u3078"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9fea403420aa99343b0fa4b9c3a9d8ba, type: 2}
   m_sharedMaterial: {fileID: 7411932553869237258, guid: 9fea403420aa99343b0fa4b9c3a9d8ba, type: 2}
@@ -1273,6 +1273,66 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1235512148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1235512149}
+  - component: {fileID: 1235512150}
+  m_Layer: 5
+  m_Name: CropButtonList
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1235512149
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235512148}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1670189156}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -640, y: 200}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1235512150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235512148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 240, y: 100}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 1
+  m_ConstraintCount: 2
 --- !u!1 &1290335098
 GameObject:
   m_ObjectHideFlags: 0
@@ -1807,6 +1867,7 @@ RectTransform:
   - {fileID: 186405600}
   - {fileID: 2130723100}
   - {fileID: 1105960891}
+  - {fileID: 1235512149}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1830,6 +1891,11 @@ MonoBehaviour:
   monthText: {fileID: 1944987894}
   moneyText: {fileID: 1844830219}
   clearUI: {fileID: 1105960890}
+  cropButtonParent: {fileID: 1235512149}
+  cropButtonItemPrefabs: {fileID: 4518065652917561479, guid: 22e9263fbbeaf3343bcd23c2907cc640, type: 3}
+  cropDefinitions:
+  - {fileID: 11400000, guid: 9c580b5c14f4ea8438be4631dd1b28de, type: 2}
+  - {fileID: 11400000, guid: 28e1f18dac6f9ae4988fd4c3b7343bbf, type: 2}
   scoreDetailParent: {fileID: 758211514}
   scoreDetailItemPrefab: {fileID: 6211453823140476579, guid: f2e3525c3ac73b74a81778206c2da8e3, type: 3}
 --- !u!1 &1807211519

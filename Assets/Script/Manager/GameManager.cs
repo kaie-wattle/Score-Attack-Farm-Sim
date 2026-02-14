@@ -12,15 +12,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 100000;
 
+    private SO_CropDefinition selectCropDefinition;
+
+    public SO_CropDefinition SelectCropDefinition => selectCropDefinition;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         dateManager.OnDateChenged += uiManager.UpdateDate;
+        tileMapManager.OnPlanted += Planted;
         tileMapManager.OnHarvested += Harvested;
         moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
 
-        uiManager.Initialize();
+        uiManager.Initialize(this);
         dateManager.Initialize();
+        tileMapManager.Initialize();
         moneyManager.Initialize(initializeMoney);
     }
 
@@ -52,6 +58,27 @@ public class GameManager : MonoBehaviour
         {
             GameClear();
         }
+    }
+
+    public void SetSelectedCrop(SO_CropDefinition _cropDef)
+    {
+        selectCropDefinition = _cropDef;
+        Debug.Log("選択した作物：" + _cropDef.cropName);
+    }
+
+    /// <summary>
+    /// 作物を植える
+    /// </summary>
+    /// <param name="cellPos">タイルの座標</param>
+    void Planted(Vector3Int cellPos)
+    {
+        if(selectCropDefinition == null)
+        {
+            Debug.Log("作物未選択");
+            return;
+        }
+
+        tileMapManager.Plant(cellPos, selectCropDefinition);
     }
 
     /// <summary>
@@ -92,6 +119,7 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         dateManager.OnDateChenged -= uiManager.UpdateDate;
+        tileMapManager.OnPlanted -= Planted;
         tileMapManager.OnHarvested -= Harvested;
         moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
     }

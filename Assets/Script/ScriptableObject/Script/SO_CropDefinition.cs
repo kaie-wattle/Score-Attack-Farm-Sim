@@ -9,6 +9,8 @@ public class SO_CropDefinition : ScriptableObject
 {
     /// <summary> ì•¨ƒ^ƒCƒv </summary>
     public CropType cropType;
+    /// <summary> ì•¨–¼ </summary>
+    public string cropName;
     /// <summary> ¬’·ŠúŠÔ </summary>
     public int growMonths;
     /// <summary> ”„‹pŠz </summary>
