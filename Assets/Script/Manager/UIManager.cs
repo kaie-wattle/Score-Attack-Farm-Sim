@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Transform cropButtonParent;
     [SerializeField] CropButtonItem cropButtonItemPrefabs;
-    [SerializeField] List<SO_CropDefinition> cropDefinitions;
+    [SerializeField] TMPro.TMP_Text selectedCropText;
 
     [SerializeField] Transform scoreDetailParent;
     [SerializeField] ScoreDetailItem scoreDetailItemPrefab;
@@ -19,17 +19,18 @@ public class UIManager : MonoBehaviour
     private GameManager gameManager;
     private List<CropButtonItem> cropButtons = new List<CropButtonItem>();
 
-    public void Initialize(GameManager _gameManager)
+    public void Initialize(GameManager _gameManager, List<SO_CropDefinition> cropDefinitionList)
     {
         gameManager = _gameManager;
         ClearScoreDetails();
         clearUI.SetActive(false);
         cropButtons.Clear();
 
-        foreach (var crop in cropDefinitions)
+        selectedCropText.SetText("未選択");
+        foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(cropButtonItemPrefabs, cropButtonParent);
-            button.SetCropButton(crop);
+            button.SetCropButton(crop,0);
             button.OnClikedEvent += _gameManager.SetSelectedCrop;
             cropButtons.Add(button);
         }
@@ -51,6 +52,39 @@ public class UIManager : MonoBehaviour
     public void UpdateMoney(int money)
     {
         moneyText.SetText(money.ToString());
+    }
+
+    /// <summary>
+    /// 種子保有状況更新
+    /// </summary>
+    /// <param name="_cropDef"></param>
+    /// <param name="count"></param>
+    public void UpdateSeedCount(SO_CropDefinition _cropDef,int count)
+    {
+        foreach (var button in cropButtons)
+        {
+            if(button.CropDef == _cropDef)
+            {
+                button.UpdateSeedCount(count);
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 選択中作物名更新
+    /// </summary>
+    /// <param name="_cropDef">作物情報</param>
+    public void UpdateSelectedCrop(SO_CropDefinition _cropDef)
+    {
+        if (_cropDef == null)
+        {
+            selectedCropText.SetText("未選択");
+        }
+        else
+        {
+            selectedCropText.SetText(_cropDef.cropName + "選択中");
+        }
     }
 
     /// <summary>

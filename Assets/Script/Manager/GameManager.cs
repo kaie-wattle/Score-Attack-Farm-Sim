@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 100000;
+    [SerializeField] List<SO_CropDefinition> cropDefinitionList;
+
+    private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
 
     private SO_CropDefinition selectCropDefinition;
 
@@ -19,15 +23,24 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+        // イベント設定
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnPlanted += Planted;
         tileMapManager.OnHarvested += Harvested;
         moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
 
-        uiManager.Initialize(this);
+        // 各Manager初期化
+        uiManager.Initialize(this, cropDefinitionList);
         dateManager.Initialize();
         tileMapManager.Initialize();
         moneyManager.Initialize(initializeMoney);
+
+        foreach (var cropDef in cropDefinitionList)
+        {
+            // TODO:デバッグ用
+            seedInventory[cropDef] = 5;
+            uiManager.UpdateSeedCount(cropDef, seedInventory[cropDef]);
+        }
     }
 
     // Update is called once per frame
@@ -60,10 +73,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 選択中作物設定
+    /// </summary>
+    /// <param name="_cropDef"></param>
     public void SetSelectedCrop(SO_CropDefinition _cropDef)
     {
         selectCropDefinition = _cropDef;
-        Debug.Log("選択した作物：" + _cropDef.cropName);
+        uiManager.UpdateSelectedCrop(selectCropDefinition);
+        Debug.Log("選択した作物：" + selectCropDefinition.cropName);
+    }
+
+    /// <summary>
+    /// 種子追加
+    /// </summary>
+    /// <param name="cropDef">作物情報</param>
+    /// <param name="count">追加数</param>
+    public void AddSeed(SO_CropDefinition cropDef,int count)
+    {
+        seedInventory[cropDef] += count;
+        uiManager.UpdateSeedCount(cropDef, seedInventory[cropDef]);
+    }
+
+    /// <summary>
+    /// 種子消費
+    /// </summary>
+    /// <param name="cropDef">作物情報</param>
+    public void UseSeed(SO_CropDefinition cropDef)
+    {
+        if(seedInventory[cropDef] <= 0)
+        {
+            // 念のためここでも種子の残量確認をする
+            SetSelectedCrop(null);
+            return;
+        }
+        seedInventory[cropDef]--;
+        uiManager.UpdateSeedCount(cropDef, seedInventory[cropDef]);
+        if (seedInventory[cropDef] <= 0)
+        {
+            selectCropDefinition = null;
+            SetSelectedCrop(null);
+        }
     }
 
     /// <summary>
@@ -78,7 +128,10 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        tileMapManager.Plant(cellPos, selectCropDefinition);
+        if(tileMapManager.Plant(cellPos, selectCropDefinition))
+        {
+            UseSeed(selectCropDefinition);
+        }
     }
 
     /// <summary>

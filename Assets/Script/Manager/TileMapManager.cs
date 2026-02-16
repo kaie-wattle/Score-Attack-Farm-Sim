@@ -13,7 +13,7 @@ public class TileMapManager : MonoBehaviour
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
 
-    /// <summary> 収穫イベント </summary>
+    /// <summary> 耕作イベント </summary>
     public event UnityAction<Vector3Int> OnPlanted;
     /// <summary> 収穫イベント </summary>
     public event UnityAction<int> OnHarvested;
@@ -54,6 +54,7 @@ public class TileMapManager : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// タイルクリック処理
     /// </summary>
@@ -102,25 +103,27 @@ public class TileMapManager : MonoBehaviour
     /// </summary>
     /// <param name="cellPos">タイルの座標</param>
     /// <param name="SelectCrop">選択されている作物</param>
-    public void Plant(Vector3Int cellPos, SO_CropDefinition SelectCrop)
+    /// <returns>植えることができたか</returns>
+    public bool Plant(Vector3Int cellPos, SO_CropDefinition SelectCrop)
     {
         if (!fieldCells.TryGetValue(cellPos, out var cell))
         {
             // 存在しないタイルをクリックした場合は処理しない
             Debug.Log("タイルがない");
-            return;
+            return false;
         }
 
         if (cell.cropData != null)
         {
             Debug.Log("既に植えている");
-            return;
+            return false;
         }
 
         // 植える
         cell.cropData = new CropData(SelectCrop);
         fieldMap.SetTile(cellPos, SelectCrop.cropTile);
         Debug.Log("植えました");
+        return true;
     }
 
     /// <summary>

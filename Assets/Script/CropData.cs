@@ -6,7 +6,11 @@ public enum CropType
     /// <summary> ïƒ </summary>
     Rice,
     /// <summary> è¨îû </summary>
-    Wheat
+    Wheat,
+    /// <summary> Ç…ÇÒÇ∂ÇÒ </summary>
+    Carrot,
+    /// <summary> ÇΩÇ‹ÇÀÇ¨ </summary>
+    Onion,
 }
 
 /// <summary>
