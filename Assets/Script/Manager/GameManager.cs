@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] MoneyManager moneyManager;
     [SerializeField] MaintenanceManager maintenanceManager;
     [SerializeField] ScoreManager scoreManager;
+    [SerializeField] ShopUIManager shopUIManager;
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 100000;
     [SerializeField] List<SO_CropDefinition> cropDefinitionList;
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
         dateManager.Initialize();
         tileMapManager.Initialize();
         moneyManager.Initialize(initializeMoney);
+        shopUIManager.Initialize(cropDefinitionList);
 
         foreach (var cropDef in cropDefinitionList)
         {

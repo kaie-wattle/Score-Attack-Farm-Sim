@@ -11,6 +11,8 @@ public class SO_CropDefinition : ScriptableObject
     public CropType cropType;
     /// <summary> ì•¨–¼ </summary>
     public string cropName;
+    /// <summary> ì•¨‰¿Ši </summary>
+    public string cropPrice;
     /// <summary> ¬’·ŠúŠÔ </summary>
     public int growMonths;
     /// <summary> ”„‹pŠz </summary>
