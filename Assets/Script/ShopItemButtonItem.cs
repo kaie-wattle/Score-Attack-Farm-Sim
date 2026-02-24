@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ShopItemButtonItem : MonoBehaviour
@@ -8,10 +9,12 @@ public class ShopItemButtonItem : MonoBehaviour
     [SerializeField] TMPro.TMP_Text stockText;
     [SerializeField] Button buyButton;
 
-    private int currentMoney;
+    private ShopUIManager shopUIManager;
     private int buyCount;
     private int stock;
     private SO_CropDefinition cropDef;
+
+    //public event UnityAction<SO_CropDefinition,int> OnBuyEvent;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //void Start()
     //{
@@ -23,11 +26,11 @@ public class ShopItemButtonItem : MonoBehaviour
     //    stockText.SetText("ç›å…:" + stock.ToString());
     //}
 
-    public void SetShopItemButton(int _stock,int _currentMoney,SO_CropDefinition _cropDef)
+    public void SetShopItemButton(int _stock, ShopUIManager _shopUIManager, SO_CropDefinition _cropDef)
     {
         buyCount = 0;
         stock = _stock;
-        currentMoney = _currentMoney;
+        shopUIManager = _shopUIManager;
         cropDef = _cropDef;
         itemNameText.SetText(cropDef.cropName);
         buyCountText.SetText(buyCount.ToString());
@@ -42,7 +45,12 @@ public class ShopItemButtonItem : MonoBehaviour
     public void OnPlusButton()
     {
         buyCount++;
-        if (buyCount > stock)
+        int cost = cropDef.sellPrice * buyCount;
+        if (cost >= ResourceManager.Instance.Money)
+        {
+            buyCount--;
+        }
+        else if (buyCount > stock)
         {
             buyCount = stock;
         }
@@ -52,7 +60,12 @@ public class ShopItemButtonItem : MonoBehaviour
     public void OnPlusTenButton()
     {
         buyCount += 10;
-        if (buyCount > stock)
+        int cost = cropDef.sellPrice * buyCount;
+        if (cost >= ResourceManager.Instance.Money)
+        {
+            buyCount = ResourceManager.Instance.Money / cropDef.sellPrice;
+        }
+        else if (buyCount > stock)
         {
             buyCount = stock;
         }
@@ -79,8 +92,14 @@ public class ShopItemButtonItem : MonoBehaviour
         buyCountText.SetText(buyCount.ToString());
     }
 
+    /// <summary>
+    /// çwì¸É{É^Éìâüâ∫èàóù
+    /// </summary>
     public void OnBuyButton()
     {
+        int cost = cropDef.sellPrice * buyCount;
+        ResourceManager.Instance.AddMoney(-cost);
+        ResourceManager.Instance.AddSeed(cropDef,buyCount);
         stock -= buyCount;
         buyCount = 0;
         buyCountText.SetText(buyCount.ToString());

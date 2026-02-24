@@ -7,48 +7,47 @@ public class GameManager : MonoBehaviour
     [SerializeField] UIManager uiManager;
     [SerializeField] DateManager dateManager;
     [SerializeField] TileMapManager tileMapManager;
-    [SerializeField] MoneyManager moneyManager;
     [SerializeField] MaintenanceManager maintenanceManager;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] ShopUIManager shopUIManager;
     [SerializeField] int endYear;
-    [SerializeField] int initializeMoney = 100000;
+    [SerializeField] int initializeMoney = 500;
     [SerializeField] List<SO_CropDefinition> cropDefinitionList;
-
-    private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
 
     private SO_CropDefinition selectCropDefinition;
 
     public SO_CropDefinition SelectCropDefinition => selectCropDefinition;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    void Start()
     {
         // イベント設定
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnPlanted += Planted;
         tileMapManager.OnHarvested += Harvested;
-        moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
+        ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
+        ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
+
+        ResourceManager.Instance.AddMoney(initializeMoney);
 
         // 各Manager初期化
         uiManager.Initialize(this, cropDefinitionList);
         dateManager.Initialize();
         tileMapManager.Initialize();
-        moneyManager.Initialize(initializeMoney);
         shopUIManager.Initialize(cropDefinitionList);
 
         foreach (var cropDef in cropDefinitionList)
         {
             // TODO:デバッグ用
-            seedInventory[cropDef] = 5;
-            uiManager.UpdateSeedCount(cropDef, seedInventory[cropDef]);
+            ResourceManager.Instance.AddSeed(cropDef, 5);
+            uiManager.UpdateSeedCount(cropDef);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /// <summary>
@@ -58,7 +57,7 @@ public class GameManager : MonoBehaviour
     {
         // 時間を進める
         dateManager.AdvanceMonth();
-        
+
         // 収穫
         tileMapManager.UpdateTile();
 
@@ -67,12 +66,20 @@ public class GameManager : MonoBehaviour
         int cost = maintenanceManager.CalcCost(tileMapManager.GetFieldCount(), tileMapManager.GetPlantedCount(), seedCount);
 
         // 支払い
-        moneyManager.AddMoney(-cost);
+        ResourceManager.Instance.AddMoney(-cost);
 
-        if(IsGameClear())
+        if (IsGameClear())
         {
             GameClear();
         }
+    }
+
+    /// <summary>
+    /// ショップ表示ボタン押下処理
+    /// </summary>
+    public void OnShopViewButton()
+    {
+        shopUIManager.ShopActive();
     }
 
     /// <summary>
@@ -83,18 +90,7 @@ public class GameManager : MonoBehaviour
     {
         selectCropDefinition = _cropDef;
         uiManager.UpdateSelectedCrop(selectCropDefinition);
-        Debug.Log("選択した作物：" + selectCropDefinition.cropName);
-    }
-
-    /// <summary>
-    /// 種子追加
-    /// </summary>
-    /// <param name="cropDef">作物情報</param>
-    /// <param name="count">追加数</param>
-    public void AddSeed(SO_CropDefinition cropDef,int count)
-    {
-        seedInventory[cropDef] += count;
-        uiManager.UpdateSeedCount(cropDef, seedInventory[cropDef]);
+        Debug.Log("選択した作物：" + (selectCropDefinition != null ? selectCropDefinition.cropName : "未選択"));
     }
 
     /// <summary>
@@ -103,34 +99,36 @@ public class GameManager : MonoBehaviour
     /// <param name="cropDef">作物情報</param>
     public void UseSeed(SO_CropDefinition cropDef)
     {
-        if(seedInventory[cropDef] <= 0)
+        if (ResourceManager.Instance.GetSeedCount(cropDef) <= 0)
         {
             // 念のためここでも種子の残量確認をする
             SetSelectedCrop(null);
             return;
         }
-        seedInventory[cropDef]--;
-        uiManager.UpdateSeedCount(cropDef, seedInventory[cropDef]);
-        if (seedInventory[cropDef] <= 0)
+
+        ResourceManager.Instance.AddSeed(cropDef, -1);
+        uiManager.UpdateSeedCount(cropDef);
+        if (ResourceManager.Instance.GetSeedCount(cropDef) <= 0)
         {
             selectCropDefinition = null;
             SetSelectedCrop(null);
         }
     }
 
+    #region イベント
     /// <summary>
     /// 作物を植える
     /// </summary>
     /// <param name="cellPos">タイルの座標</param>
     void Planted(Vector3Int cellPos)
     {
-        if(selectCropDefinition == null)
+        if (selectCropDefinition == null)
         {
             Debug.Log("作物未選択");
             return;
         }
 
-        if(tileMapManager.Plant(cellPos, selectCropDefinition))
+        if (tileMapManager.Plant(cellPos, selectCropDefinition))
         {
             UseSeed(selectCropDefinition);
         }
@@ -142,7 +140,7 @@ public class GameManager : MonoBehaviour
     /// <param name="income">収入</param>
     void Harvested(int income)
     {
-        moneyManager.AddMoney(income);
+        ResourceManager.Instance.AddMoney(income);
     }
 
     /// <summary>
@@ -155,16 +153,36 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 所持金更新
+    /// </summary>
+    void MoneyChanged()
+    {
+        uiManager.UpdateMoney();
+        shopUIManager.UpdateMoney();
+        Debug.Log("お金変更");
+    }
+
+    /// <summary>
+    /// 種子保有量更新
+    /// </summary>
+    /// <param name="cropDef">作物情報</param>
+    void SeedChanged(SO_CropDefinition cropDef)
+    {
+        uiManager.UpdateSeedCount(cropDef);
+    }
+    #endregion
+
+    /// <summary>
     /// ゲームクリア
     /// </summary>
     void GameClear()
     {
         ScoreContext context = new ScoreContext
         {
-            Money = moneyManager.CurrentMoney,
+            Money = ResourceManager.Instance.Money,
             FieldCount = tileMapManager.GetFieldCount(),
             LivestockArea = 0, // 未実装
-            IsNeverDebt = moneyManager.IsNeverDebt,
+            IsNeverDebt = ResourceManager.Instance.IsNeverDebt,
             IsCropOnly = true // 仮
         };
         ScoreResult score = scoreManager.CalcScore(context);
@@ -176,6 +194,7 @@ public class GameManager : MonoBehaviour
         dateManager.OnDateChenged -= uiManager.UpdateDate;
         tileMapManager.OnPlanted -= Planted;
         tileMapManager.OnHarvested -= Harvested;
-        moneyManager.OnMoneyChanged += uiManager.UpdateMoney;
+        ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
+        ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;
     }
 }

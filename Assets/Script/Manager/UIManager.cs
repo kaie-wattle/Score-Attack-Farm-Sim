@@ -48,24 +48,22 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 所持金更新
     /// </summary>
-    /// <param name="money">お金</param>
-    public void UpdateMoney(int money)
+    public void UpdateMoney()
     {
-        moneyText.SetText(money.ToString());
+        moneyText.SetText(ResourceManager.Instance.Money.ToString());
     }
 
     /// <summary>
     /// 種子保有状況更新
     /// </summary>
     /// <param name="_cropDef"></param>
-    /// <param name="count"></param>
-    public void UpdateSeedCount(SO_CropDefinition _cropDef,int count)
+    public void UpdateSeedCount(SO_CropDefinition _cropDef)
     {
         foreach (var button in cropButtons)
         {
             if(button.CropDef == _cropDef)
             {
-                button.UpdateSeedCount(count);
+                button.UpdateSeedCount(ResourceManager.Instance.GetSeedCount(_cropDef));
                 break;
             }
         }
