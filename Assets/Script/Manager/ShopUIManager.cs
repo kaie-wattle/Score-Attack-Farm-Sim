@@ -4,11 +4,13 @@ using UnityEngine;
 public class ShopUIManager : MonoBehaviour
 {
     [SerializeField] GameObject shopUI;
-    [SerializeField] Transform shopButtonParent;
-    [SerializeField] ShopItemButtonItem shopButtonItemPrefabs;
+    [SerializeField] GameObject shopSeedButtonParent;
+    [SerializeField] GameObject shopLivestockButtonParent;
+    [SerializeField] GameObject shopExpansionButtonParent;
+    [SerializeField] ShopItemSeedButton shopButtonSeedItemPrefabs;
     [SerializeField] TMPro.TMP_Text moneyText;
 
-    private List<ShopItemButtonItem> shopButtons = new List<ShopItemButtonItem>();
+    private List<ShopItemSeedButton> shopButtons = new List<ShopItemSeedButton>();
     private int currentMoney;
     public int CurrentMoney => currentMoney;
 
@@ -18,8 +20,8 @@ public class ShopUIManager : MonoBehaviour
 
         foreach (var crop in cropDefinitionList)
         {
-            var button = Instantiate(shopButtonItemPrefabs, shopButtonParent);
-            button.SetShopItemButton(25,this,crop);
+            var button = Instantiate(shopButtonSeedItemPrefabs, shopSeedButtonParent.transform);
+            button.SetShopItemButton(25,crop);
             shopButtons.Add(button);
         }
     }
@@ -30,6 +32,15 @@ public class ShopUIManager : MonoBehaviour
     public void UpdateMoney()
     {
         moneyText.SetText(ResourceManager.Instance.Money.ToString());
+        foreach (var button in shopButtons)
+        {
+            button.UpdateInteractable();
+        }
+    }
+
+    public void ShopActive()
+    {
+        shopUI.SetActive(true);
     }
 
     public void OnShopCloseButton()
@@ -37,8 +48,24 @@ public class ShopUIManager : MonoBehaviour
         shopUI.SetActive(false);
     }
 
-    public void ShopActive()
+    public void OnSeedTabButton()
     {
-        shopUI.SetActive(true);
+        shopSeedButtonParent.SetActive(true);
+        shopLivestockButtonParent.SetActive(false);
+        shopExpansionButtonParent.SetActive(false);
+    }
+
+    public void OnLivestockTabButton()
+    {
+        shopSeedButtonParent.SetActive(false);
+        shopLivestockButtonParent.SetActive(true);
+        shopExpansionButtonParent.SetActive(false);
+    }
+
+    public void OnExpansionTabButton()
+    {
+        shopSeedButtonParent.SetActive(false);
+        shopLivestockButtonParent.SetActive(false);
+        shopExpansionButtonParent.SetActive(true);
     }
 }

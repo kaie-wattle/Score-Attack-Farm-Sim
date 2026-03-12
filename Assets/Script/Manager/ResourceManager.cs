@@ -4,17 +4,26 @@ using UnityEngine.Events;
 
 public class ResourceManager : MonoBehaviour
 {
+    [SerializeField] int ColMax;
+    [SerializeField] int RowMax;
     public static ResourceManager Instance { get; private set; }
 
-    public int Money { get; private set; }
     public bool IsNeverDebt => isNeverDebt;
+    public bool IsFieldMax => isFieldMax;
     public event UnityAction OnMoneyChanged;
     public event UnityAction<SO_CropDefinition> OnSeedInventoryChanged;
 
-    bool isNeverDebt;
 
+    /// <summary> 所持金 </summary>
+    public int Money { get; private set; }
+    /// <summary> 種子保有数 </summary>
     private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
-    
+    /// <summary> 耕地面積 </summary>
+    public int FiledCount { get; private set; }
+
+    private bool isNeverDebt;
+    private bool isFieldMax;
+
     void Awake()
     {
         if (Instance != null)
@@ -36,9 +45,9 @@ public class ResourceManager : MonoBehaviour
         OnMoneyChanged?.Invoke();
     }
 
-    public void AddSeed(SO_CropDefinition cropDef,int value)
+    public void AddSeed(SO_CropDefinition cropDef, int value)
     {
-        if(!seedInventory.ContainsKey(cropDef))
+        if (!seedInventory.ContainsKey(cropDef))
         {
             seedInventory[cropDef] = 0;
         }
@@ -49,6 +58,22 @@ public class ResourceManager : MonoBehaviour
     public int GetSeedCount(SO_CropDefinition cropDef)
     {
         return seedInventory.ContainsKey(cropDef) ? seedInventory[cropDef] : 0;
+    }
+
+    public void AddField()
+    {
+        if (FiledCount >= ColMax * RowMax)
+        {
+            Debug.Log("もう置けません");
+        }
+        else
+        {
+            FiledCount++;
+            if (FiledCount >= ColMax * RowMax)
+            {
+                isFieldMax = true;
+            }
+        }
     }
 
     /// <summary>

@@ -12,6 +12,7 @@ public class TileMapManager : MonoBehaviour
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
+    Vector3Int StartPos = new Vector3Int(-7, -3, 0);
 
     /// <summary> 耕作イベント </summary>
     public event UnityAction<Vector3Int> OnPlanted;
@@ -124,6 +125,15 @@ public class TileMapManager : MonoBehaviour
         fieldMap.SetTile(cellPos, SelectCrop.cropTile);
         Debug.Log("植えました");
         return true;
+    }
+
+    void SetGroundTile()
+    {
+        int ColMax = 7; // デバッグ
+        int currentCol = ResourceManager.Instance.FiledCount % ColMax;
+        int currentRow = ResourceManager.Instance.FiledCount / ColMax;
+        Vector3Int setPos = new Vector3Int(StartPos.x + currentCol, StartPos.y + currentRow, 0);
+        fieldMap.SetTile(setPos, groundTile);
     }
 
     /// <summary>
