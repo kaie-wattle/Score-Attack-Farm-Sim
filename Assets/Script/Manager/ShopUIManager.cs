@@ -8,21 +8,30 @@ public class ShopUIManager : MonoBehaviour
     [SerializeField] GameObject shopLivestockButtonParent;
     [SerializeField] GameObject shopExpansionButtonParent;
     [SerializeField] ShopItemSeedButton shopButtonSeedItemPrefabs;
+    [SerializeField] ShopItemExpansionButton shopButtonExpansionItemPrefabs;
     [SerializeField] TMPro.TMP_Text moneyText;
 
-    private List<ShopItemSeedButton> shopButtons = new List<ShopItemSeedButton>();
+    private List<ShopItemSeedButton> shopSeedButtons = new List<ShopItemSeedButton>();
+    private List<ShopItemExpansionButton> shopExpansionButtons = new List<ShopItemExpansionButton>();
     private int currentMoney;
     public int CurrentMoney => currentMoney;
 
-    public void Initialize(List<SO_CropDefinition> cropDefinitionList)
+    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LandDefinition> landDefinitionList)
     {
-        shopButtons.Clear();
+        shopSeedButtons.Clear();
 
         foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(shopButtonSeedItemPrefabs, shopSeedButtonParent.transform);
             button.SetShopItemButton(25,crop);
-            shopButtons.Add(button);
+            shopSeedButtons.Add(button);
+        }
+
+        foreach (var land in landDefinitionList)
+        {
+            var button = Instantiate(shopButtonExpansionItemPrefabs, shopExpansionButtonParent.transform);
+            button.SetShopItemButton(25, land);
+            shopExpansionButtons.Add(button);
         }
     }
 
@@ -32,7 +41,7 @@ public class ShopUIManager : MonoBehaviour
     public void UpdateMoney()
     {
         moneyText.SetText(ResourceManager.Instance.Money.ToString());
-        foreach (var button in shopButtons)
+        foreach (var button in shopSeedButtons)
         {
             button.UpdateInteractable();
         }

@@ -11,7 +11,7 @@ public class ShopItemSeedButton : ShopItemButtonItemBase
         cropDef = _cropDef;
         sellPrice = cropDef.sellPrice;
         itemName = cropDef.cropName;
-        itemNameText.SetText(cropDef.cropName);
+        itemNameText.SetText(itemName);
         buyCountText.SetText(buyCount.ToString());
         stockText.SetText("ç›å…:" + stock.ToString());
         UpdateInteractable();

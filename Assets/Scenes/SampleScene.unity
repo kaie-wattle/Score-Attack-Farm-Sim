@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 253628020}
   - component: {fileID: 253628019}
   m_Layer: 0
-  m_Name: GamaManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -594,6 +594,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 28e1f18dac6f9ae4988fd4c3b7343bbf, type: 2}
   - {fileID: 11400000, guid: 0249d9ccf995cc24ca17c2f846c88120, type: 2}
   - {fileID: 11400000, guid: 15b5227f68ee21048ba1e2d7ea6c55ee, type: 2}
+  landDefinitionList:
+  - {fileID: 11400000, guid: 47752f819589c0a4c90496fb29c36fbb, type: 2}
+  - {fileID: 11400000, guid: 6605e56cd1b3eb342910195cec00835a, type: 2}
 --- !u!4 &253628020
 Transform:
   m_ObjectHideFlags: 0
@@ -1732,6 +1735,7 @@ MonoBehaviour:
   shopLivestockButtonParent: {fileID: 1313413620}
   shopExpansionButtonParent: {fileID: 1170612405}
   shopButtonSeedItemPrefabs: {fileID: 5372273371689040338, guid: 04e97b56b84fa3a4eb3896a6ff6b4ea0, type: 3}
+  shopButtonExpansionItemPrefabs: {fileID: 1433399915708707088, guid: 056156f2137b19245a8278ae32b146b4, type: 3}
   moneyText: {fileID: 545223953}
 --- !u!1 &851399774
 GameObject:

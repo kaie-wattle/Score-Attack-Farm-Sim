@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5670797053192883497}
   - component: {fileID: 1512315814945799094}
-  - component: {fileID: 5372273371689040338}
+  - component: {fileID: 1433399915708707088}
   m_Layer: 5
-  m_Name: ShopItem
+  m_Name: ShopItemExpansion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &5372273371689040338
+--- !u!114 &1433399915708707088
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,9 +80,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 71798035735784597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e79ff8c817a2f8243ac969d938d5bb3e, type: 3}
+  m_Script: {fileID: 11500000, guid: 629e896fa6efdd4428b05bb15808b45d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShopItemSeedButton
+  m_EditorClassIdentifier: Assembly-CSharp::ShopItemExpansionButton
   itemNameText: {fileID: 4157471191159649818}
   buyCountText: {fileID: 8536220994255435800}
   stockText: {fileID: 871810461046382218}
@@ -482,8 +482,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5372273371689040338}
-        m_TargetAssemblyTypeName: ShopItemSeedButton, Assembly-CSharp
+      - m_Target: {fileID: 1433399915708707088}
+        m_TargetAssemblyTypeName: ShopItemExpansionButton, Assembly-CSharp
         m_MethodName: OnPlusButton
         m_Mode: 1
         m_Arguments:
@@ -1163,8 +1163,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5372273371689040338}
-        m_TargetAssemblyTypeName: ShopItemSeedButton, Assembly-CSharp
+      - m_Target: {fileID: 1433399915708707088}
+        m_TargetAssemblyTypeName: ShopItemExpansionButton, Assembly-CSharp
         m_MethodName: OnPlusTenButton
         m_Mode: 1
         m_Arguments:
@@ -1296,8 +1296,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5372273371689040338}
-        m_TargetAssemblyTypeName: ShopItemSeedButton, Assembly-CSharp
+      - m_Target: {fileID: 1433399915708707088}
+        m_TargetAssemblyTypeName: ShopItemExpansionButton, Assembly-CSharp
         m_MethodName: OnMinusTenButton
         m_Mode: 1
         m_Arguments:
@@ -1429,9 +1429,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5372273371689040338}
-        m_TargetAssemblyTypeName: ShopItemSeedButton, Assembly-CSharp
-        m_MethodName: OnMinusButton
+      - m_Target: {fileID: 1433399915708707088}
+        m_TargetAssemblyTypeName: ShopItemExpansionButton, Assembly-CSharp
+        m_MethodName: CancelInvoke
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1699,8 +1699,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5372273371689040338}
-        m_TargetAssemblyTypeName: ShopItemSeedButton, Assembly-CSharp
+      - m_Target: {fileID: 1433399915708707088}
+        m_TargetAssemblyTypeName: ShopItemExpansionButton, Assembly-CSharp
         m_MethodName: OnBuyButton
         m_Mode: 1
         m_Arguments:
