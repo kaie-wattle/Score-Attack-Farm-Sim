@@ -12,7 +12,7 @@ public class TileMapManager : MonoBehaviour
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
-    Vector3Int StartPos = new Vector3Int(-7, -3, 0);
+    Vector3Int StartPos = new Vector3Int(-7, -4, 0);
 
     /// <summary> 耕作イベント </summary>
     public event UnityAction<Vector3Int> OnPlanted;
@@ -78,16 +78,16 @@ public class TileMapManager : MonoBehaviour
     /// </summary>
     public void UpdateTile()
     {
-        foreach(var cell in fieldCells.Values)
+        foreach (var cell in fieldCells.Values)
         {
-            if(cell.cropData == null)
+            if (cell.cropData == null)
             {
                 continue;
             }
 
             // 全ての作物を1段階成長させる
             cell.cropData.growthStage++;
-            if(cell.cropData.growthStage >= cell.cropData.so_CropDefinition.growMonths)
+            if (cell.cropData.growthStage >= cell.cropData.so_CropDefinition.growMonths)
             {
                 // 成長しきったら収穫する
                 Debug.Log(cell.cropData.so_CropDefinition.sellPrice);
@@ -127,13 +127,14 @@ public class TileMapManager : MonoBehaviour
         return true;
     }
 
-    void SetGroundTile()
+    public void SetGroundTile()
     {
         int ColMax = 7; // デバッグ
         int currentCol = ResourceManager.Instance.FiledCount % ColMax;
         int currentRow = ResourceManager.Instance.FiledCount / ColMax;
         Vector3Int setPos = new Vector3Int(StartPos.x + currentCol, StartPos.y + currentRow, 0);
         fieldMap.SetTile(setPos, groundTile);
+        fieldCells[setPos] = new FieldCellData(setPos);
     }
 
     /// <summary>
@@ -152,7 +153,7 @@ public class TileMapManager : MonoBehaviour
     public int GetPlantedCount()
     {
         int ret = 0;
-        foreach(var cell in fieldCells.Values)
+        foreach (var cell in fieldCells.Values)
         {
             if (cell.cropData != null)
                 ret++;

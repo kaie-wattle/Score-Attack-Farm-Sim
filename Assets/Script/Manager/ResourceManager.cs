@@ -12,7 +12,7 @@ public class ResourceManager : MonoBehaviour
     public bool IsFieldMax => isFieldMax;
     public event UnityAction OnMoneyChanged;
     public event UnityAction<SO_CropDefinition> OnSeedInventoryChanged;
-
+    public event UnityAction OnFieldCountChanged;
 
     /// <summary> èäéùã‡ </summary>
     public int Money { get; private set; }
@@ -60,7 +60,7 @@ public class ResourceManager : MonoBehaviour
         return seedInventory.ContainsKey(cropDef) ? seedInventory[cropDef] : 0;
     }
 
-    public void AddField()
+    public void AddField(int value)
     {
         if (FiledCount >= ColMax * RowMax)
         {
@@ -68,12 +68,21 @@ public class ResourceManager : MonoBehaviour
         }
         else
         {
-            FiledCount++;
-            if (FiledCount >= ColMax * RowMax)
+            for (int i = 0; i < value; i++)
             {
-                isFieldMax = true;
+                OnFieldCountChanged?.Invoke();
+                FiledCount++;
+                if (FiledCount >= ColMax * RowMax)
+                {
+                    isFieldMax = true;
+                }
             }
         }
+    }
+
+    public int FieldMax()
+    {
+        return ColMax * RowMax;
     }
 
     /// <summary>

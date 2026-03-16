@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnHarvested += Harvested;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
+        ResourceManager.Instance.OnFieldCountChanged += FieldChanged;
 
         ResourceManager.Instance.AddMoney(initializeMoney);
 
@@ -171,6 +172,14 @@ public class GameManager : MonoBehaviour
     {
         uiManager.UpdateSeedCount(cropDef);
     }
+
+    /// <summary>
+    /// çkínñ êœçXêV
+    /// </summary>
+    void FieldChanged()
+    {
+        tileMapManager.SetGroundTile();
+    }
     #endregion
 
     /// <summary>
@@ -197,5 +206,6 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnHarvested -= Harvested;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;
+        ResourceManager.Instance.OnFieldCountChanged -= FieldChanged;
     }
 }

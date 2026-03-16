@@ -20,6 +20,7 @@ public class ShopUIManager : MonoBehaviour
     {
         shopSeedButtons.Clear();
 
+        // 種子商品リスト
         foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(shopButtonSeedItemPrefabs, shopSeedButtonParent.transform);
@@ -27,10 +28,11 @@ public class ShopUIManager : MonoBehaviour
             shopSeedButtons.Add(button);
         }
 
+        // 土地拡張リスト
         foreach (var land in landDefinitionList)
         {
             var button = Instantiate(shopButtonExpansionItemPrefabs, shopExpansionButtonParent.transform);
-            button.SetShopItemButton(25, land);
+            button.SetShopItemButton(ResourceManager.Instance.FieldMax() - ResourceManager.Instance.FiledCount, land);
             shopExpansionButtons.Add(button);
         }
     }
@@ -50,6 +52,7 @@ public class ShopUIManager : MonoBehaviour
     public void ShopActive()
     {
         shopUI.SetActive(true);
+        OnSeedTabButton();
     }
 
     public void OnShopCloseButton()
