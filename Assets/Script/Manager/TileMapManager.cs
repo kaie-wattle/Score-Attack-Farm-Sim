@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 public class TileMapManager : MonoBehaviour
 {
     [SerializeField] Tilemap fieldMap;
+    [SerializeField] Tilemap livestockMap;
     [SerializeField] Tile glassTile; // 未使用 拡張可能エリアとして使用予定
     [SerializeField] Tile groundTile;
 
@@ -18,6 +19,9 @@ public class TileMapManager : MonoBehaviour
     public event UnityAction<Vector3Int> OnPlanted;
     /// <summary> 収穫イベント </summary>
     public event UnityAction<int> OnHarvested;
+
+    public void OnChangeFieldTileButton() => OnChangeTileMap(LandType.Farmland);
+    public void OnChangeLivestockTileButton() => OnChangeTileMap(LandType.LivestockArea);
 
     public void Initialize()
     {
@@ -71,6 +75,27 @@ public class TileMapManager : MonoBehaviour
         var cellPos = fieldMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
 
         OnPlanted?.Invoke(cellPos);
+    }
+
+    /// <summary>
+    /// タイルマップ切り替え
+    /// </summary>
+    /// <param name="landType">タイルマップ種別</param>
+    void OnChangeTileMap(LandType landType)
+    {
+        switch(landType)
+        {
+            case LandType.Farmland:
+                fieldMap.gameObject.SetActive(true);
+                livestockMap.gameObject.SetActive(false);
+                break;
+            case LandType.LivestockArea:
+                fieldMap.gameObject.SetActive(false);
+                livestockMap.gameObject.SetActive(true);
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
