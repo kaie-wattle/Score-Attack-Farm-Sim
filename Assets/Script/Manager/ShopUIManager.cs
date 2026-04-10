@@ -19,6 +19,7 @@ public class ShopUIManager : MonoBehaviour
     public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LandDefinition> landDefinitionList)
     {
         shopSeedButtons.Clear();
+        shopExpansionButtons.Clear();
 
         // 種子商品リスト
         foreach (var crop in cropDefinitionList)
@@ -31,8 +32,21 @@ public class ShopUIManager : MonoBehaviour
         // 土地拡張リスト
         foreach (var land in landDefinitionList)
         {
+            int stock = 0;
+            switch (land.landType)
+            {
+                case LandType.Farmland:
+                    stock = ResourceManager.Instance.GetAreaMax() - ResourceManager.Instance.FieldCount;
+                    break;
+                case LandType.LivestockArea:
+                    stock = ResourceManager.Instance.GetAreaMax() - ResourceManager.Instance.LivestockAreaCount;
+                    break;
+                case LandType.None:
+                    Debug.Log("商品情報が正しく設定されていません");
+                    break;
+            }
             var button = Instantiate(shopButtonExpansionItemPrefabs, shopExpansionButtonParent.transform);
-            button.SetShopItemButton(ResourceManager.Instance.FieldMax() - ResourceManager.Instance.FiledCount, land);
+            button.SetShopItemButton(stock, land);
             shopExpansionButtons.Add(button);
         }
     }
@@ -47,6 +61,11 @@ public class ShopUIManager : MonoBehaviour
         {
             button.UpdateInteractable();
         }
+
+        foreach (var button in shopExpansionButtons)
+        {
+            button.UpdateInteractable();
+        }
     }
 
     public void ShopActive()
@@ -58,6 +77,15 @@ public class ShopUIManager : MonoBehaviour
     public void OnShopCloseButton()
     {
         shopUI.SetActive(false);
+        foreach (var button in shopSeedButtons)
+        {
+            button.ResetBuyCount();
+        }
+
+        foreach (var button in shopExpansionButtons)
+        {
+            button.ResetBuyCount();
+        }
     }
 
     public void OnSeedTabButton()

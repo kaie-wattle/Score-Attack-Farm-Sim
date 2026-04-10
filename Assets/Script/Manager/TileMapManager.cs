@@ -8,11 +8,12 @@ public class TileMapManager : MonoBehaviour
 {
     [SerializeField] Tilemap fieldMap;
     [SerializeField] Tilemap livestockMap;
-    [SerializeField] Tile glassTile; // 未使用 拡張可能エリアとして使用予定
+    [SerializeField] Tile glassTile;
     [SerializeField] Tile groundTile;
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
+    Dictionary<Vector3Int, LivestockAreaCellData> livestockCells;
     Vector3Int StartPos = new Vector3Int(-7, -4, 0);
 
     /// <summary> 耕作イベント </summary>
@@ -27,6 +28,7 @@ public class TileMapManager : MonoBehaviour
     {
         mainCamera = Camera.main;
         InitField();
+        InitLivestockArea();
     }
 
     // Update is called once per frame
@@ -61,6 +63,28 @@ public class TileMapManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 畜産情報初期化
+    /// </summary>
+    void InitLivestockArea()
+    {
+        // 各セルの作物情報を初期化する。
+        livestockCells = new Dictionary<Vector3Int, LivestockAreaCellData>();
+        var bounds = livestockMap.cellBounds;
+
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                Vector3Int cellPos = new Vector3Int(x, y, 0);
+                if (livestockMap.HasTile(cellPos))
+                {
+                    livestockCells[cellPos] = new LivestockAreaCellData(cellPos);
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// タイルクリック処理
     /// </summary>
     void ClickTile()
@@ -72,9 +96,16 @@ public class TileMapManager : MonoBehaviour
         }
         var pos = Input.mousePosition;
         pos.z = 0;
-        var cellPos = fieldMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
+        if (fieldMap.gameObject.activeInHierarchy)
+        {
+            var cellPos = fieldMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
 
-        OnPlanted?.Invoke(cellPos);
+            OnPlanted?.Invoke(cellPos);
+        }
+        else if (livestockMap.gameObject.activeInHierarchy)
+        {
+
+        }
     }
 
     /// <summary>
@@ -152,14 +183,30 @@ public class TileMapManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 農地拡張
+    /// </summary>
     public void SetGroundTile()
     {
         int ColMax = 7; // デバッグ
-        int currentCol = ResourceManager.Instance.FiledCount % ColMax;
-        int currentRow = ResourceManager.Instance.FiledCount / ColMax;
+        int currentCol = ResourceManager.Instance.FieldCount % ColMax;
+        int currentRow = ResourceManager.Instance.FieldCount / ColMax;
         Vector3Int setPos = new Vector3Int(StartPos.x + currentCol, StartPos.y + currentRow, 0);
         fieldMap.SetTile(setPos, groundTile);
         fieldCells[setPos] = new FieldCellData(setPos);
+    }
+
+    /// <summary>
+    /// 畜産面積拡張
+    /// </summary>
+    public void SetGlassTile()
+    {
+        int ColMax = 7; // デバッグ
+        int currentCol = ResourceManager.Instance.LivestockAreaCount % ColMax;
+        int currentRow = ResourceManager.Instance.LivestockAreaCount / ColMax;
+        Vector3Int setPos = new Vector3Int(StartPos.x + currentCol, StartPos.y + currentRow, 0);
+        livestockMap.SetTile(setPos, glassTile);
+        livestockCells[setPos] = new LivestockAreaCellData(setPos);
     }
 
     /// <summary>

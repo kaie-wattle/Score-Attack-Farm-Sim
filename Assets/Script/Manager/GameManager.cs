@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
         ResourceManager.Instance.OnFieldCountChanged += FieldChanged;
+        ResourceManager.Instance.OnLivestockAreaCountChanged += LivestockAreaChanged;
 
         ResourceManager.Instance.AddMoney(initializeMoney);
 
@@ -180,6 +181,14 @@ public class GameManager : MonoBehaviour
     {
         tileMapManager.SetGroundTile();
     }
+
+    /// <summary>
+    /// í{éYñ êœçXêV
+    /// </summary>
+    void LivestockAreaChanged()
+    {
+        tileMapManager.SetGlassTile();
+    }
     #endregion
 
     /// <summary>
@@ -207,5 +216,6 @@ public class GameManager : MonoBehaviour
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;
         ResourceManager.Instance.OnFieldCountChanged -= FieldChanged;
+        ResourceManager.Instance.OnLivestockAreaCountChanged -= LivestockAreaChanged;
     }
 }

@@ -34,6 +34,13 @@ public class ShopItemButtonItemBase : MonoBehaviour
         }
     }
 
+    public void ResetBuyCount()
+    {
+        buyCount = 0;
+        buyCountText.SetText(buyCount.ToString());
+        UpdateInteractable();
+    }
+
     protected void AddBuyCount(int amount)
     {
         buyCount += amount;

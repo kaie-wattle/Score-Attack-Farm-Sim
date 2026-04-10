@@ -10,19 +10,24 @@ public class ResourceManager : MonoBehaviour
 
     public bool IsNeverDebt => isNeverDebt;
     public bool IsFieldMax => isFieldMax;
+    public bool IsLivestockAreaMax => isLivestockAreaMax;
     public event UnityAction OnMoneyChanged;
     public event UnityAction<SO_CropDefinition> OnSeedInventoryChanged;
     public event UnityAction OnFieldCountChanged;
+    public event UnityAction OnLivestockAreaCountChanged;
 
     /// <summary> 所持金 </summary>
     public int Money { get; private set; }
     /// <summary> 種子保有数 </summary>
     private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
     /// <summary> 耕地面積 </summary>
-    public int FiledCount { get; private set; }
+    public int FieldCount { get; private set; }
+    /// <summary> 耕地面積 </summary>
+    public int LivestockAreaCount { get; private set; }
 
     private bool isNeverDebt;
     private bool isFieldMax;
+    private bool isLivestockAreaMax;
 
     void Awake()
     {
@@ -35,6 +40,10 @@ public class ResourceManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    /// <summary>
+    /// 所持金更新
+    /// </summary>
+    /// <param name="value"></param>
     public void AddMoney(int value)
     {
         Money += value;
@@ -45,6 +54,11 @@ public class ResourceManager : MonoBehaviour
         OnMoneyChanged?.Invoke();
     }
 
+    /// <summary>
+    /// 保有種子更新
+    /// </summary>
+    /// <param name="cropDef"></param>
+    /// <param name="value"></param>
     public void AddSeed(SO_CropDefinition cropDef, int value)
     {
         if (!seedInventory.ContainsKey(cropDef))
@@ -55,14 +69,23 @@ public class ResourceManager : MonoBehaviour
         OnSeedInventoryChanged?.Invoke(cropDef);
     }
 
+    /// <summary>
+    /// 保有種子数取得
+    /// </summary>
+    /// <param name="cropDef"></param>
+    /// <returns></returns>
     public int GetSeedCount(SO_CropDefinition cropDef)
     {
         return seedInventory.ContainsKey(cropDef) ? seedInventory[cropDef] : 0;
     }
 
+    /// <summary>
+    /// 農地拡張
+    /// </summary>
+    /// <param name="value"></param>
     public void AddField(int value)
     {
-        if (FiledCount >= ColMax * RowMax)
+        if (FieldCount >= ColMax * RowMax)
         {
             Debug.Log("もう置けません");
         }
@@ -71,8 +94,8 @@ public class ResourceManager : MonoBehaviour
             for (int i = 0; i < value; i++)
             {
                 OnFieldCountChanged?.Invoke();
-                FiledCount++;
-                if (FiledCount >= ColMax * RowMax)
+                FieldCount++;
+                if (FieldCount >= ColMax * RowMax)
                 {
                     isFieldMax = true;
                 }
@@ -80,7 +103,35 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
-    public int FieldMax()
+    /// <summary>
+    /// 畜産面積拡張
+    /// </summary>
+    /// <param name="value"></param>
+    public void AddLivestockArea(int value)
+    {
+        if (LivestockAreaCount >= ColMax * RowMax)
+        {
+            Debug.Log("もう置けません");
+        }
+        else
+        {
+            for (int i = 0; i < value; i++)
+            {
+                OnLivestockAreaCountChanged?.Invoke();
+                LivestockAreaCount++;
+                if (LivestockAreaCount >= ColMax * RowMax)
+                {
+                    isLivestockAreaMax = true;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// エリア最大数取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetAreaMax()
     {
         return ColMax * RowMax;
     }

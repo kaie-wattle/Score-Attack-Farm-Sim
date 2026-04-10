@@ -30,14 +30,33 @@ public class ShopItemExpansionButton : ShopItemButtonItemBase
         }
         else
         {
-            ResourceManager.Instance.AddMoney(-cost);
-            ResourceManager.Instance.AddField(buyCount);
-            stock -= buyCount;
-            buyCount = 0;
-            buyCountText.SetText(buyCount.ToString());
-            stockText.SetText("ç›å…:" + stock.ToString());
-            UpdateInteractable();
-            Debug.Log("çwì¸ÇµÇ‹ÇµÇΩÅB");
+            switch(landDef.landType)
+            {
+                case LandType.Farmland:
+                    ResourceManager.Instance.AddMoney(-cost);
+                    ResourceManager.Instance.AddField(buyCount);
+                    stock -= buyCount;
+                    buyCount = 0;
+                    buyCountText.SetText(buyCount.ToString());
+                    stockText.SetText("ç›å…:" + stock.ToString());
+                    UpdateInteractable();
+                    Debug.Log("î_ínÇägí£ÇµÇ‹ÇµÇΩÅB");
+                    break;
+                case LandType.LivestockArea:
+                    Debug.Log("í{éYÉGÉäÉAÇägí£ÇµÇ‹ÇµÇΩÅB");
+                    ResourceManager.Instance.AddMoney(-cost);
+                    ResourceManager.Instance.AddLivestockArea(buyCount);
+                    stock -= buyCount;
+                    buyCount = 0;
+                    buyCountText.SetText(buyCount.ToString());
+                    stockText.SetText("ç›å…:" + stock.ToString());
+                    UpdateInteractable();
+                    break;
+                case LandType.None:
+                    Debug.Log("è§ïièÓïÒÇ™ê≥ÇµÇ≠ê›íËÇ≥ÇÍÇƒÇ¢Ç‹ÇπÇÒ");
+                    break;
+            }
+            
         }
     }
 }
