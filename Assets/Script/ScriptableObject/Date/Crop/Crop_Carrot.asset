@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70f0fd7711d0a584280dfa25fde8a0e0, type: 3}
-  m_Name: Crop_Rice
+  m_Name: Crop_Carrot
   m_EditorClassIdentifier: Assembly-CSharp::SO_CropDefinition
-  cropType: 1
-  cropName: "\u7C73"
-  growMonths: 1
-  sellPrice: 100
-  cropTile: {fileID: 11400000, guid: 6a13435b49055384f9d97be5220844b3, type: 2}
+  cropType: 3
+  cropName: "\u306B\u3093\u3058\u3093"
+  cropPrice: 150
+  growMonths: 3
+  sellPrice: 250
+  cropTile: {fileID: 11400000, guid: ec8cf74750347cc409228e6ec33c47ad, type: 2}

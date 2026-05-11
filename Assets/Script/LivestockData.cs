@@ -20,9 +20,12 @@ public enum LivestockType
 public class LivestockData
 {
     public SO_LivestockDefinition so_LivestockDefinition;
+    /// <summary> ê¨í∑íiäK </summary>
+    public int growthStage;
 
     public LivestockData(SO_LivestockDefinition livestockDefinition)
     {
         so_LivestockDefinition = livestockDefinition;
+        growthStage = 0;
     }
 }

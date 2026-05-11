@@ -9,7 +9,7 @@ public class ShopItemSeedButton : ShopItemButtonItemBase
         buyCount = 0;
         stock = _stock;
         cropDef = _cropDef;
-        sellPrice = cropDef.sellPrice;
+        sellPrice = cropDef.cropPrice;
         itemName = cropDef.cropName;
         itemNameText.SetText(itemName);
         buyCountText.SetText(buyCount.ToString());

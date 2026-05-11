@@ -12,7 +12,7 @@ public class SO_CropDefinition : ScriptableObject
     /// <summary> ì•¨–¼ </summary>
     public string cropName;
     /// <summary> ì•¨‰¿Ši </summary>
-    public string cropPrice;
+    public int cropPrice;
     /// <summary> ¬’·ŠúŠÔ </summary>
     public int growMonths;
     /// <summary> ”„‹pŠz </summary>
