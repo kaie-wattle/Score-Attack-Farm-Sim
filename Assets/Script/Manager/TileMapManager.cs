@@ -20,6 +20,8 @@ public class TileMapManager : MonoBehaviour
     public event UnityAction<Vector3Int> OnPlanted;
     /// <summary> 収穫イベント </summary>
     public event UnityAction<int> OnHarvested;
+    /// <summary> 収穫イベント </summary>
+    public event UnityAction<LandType> OnTileChanged;
 
     public void OnChangeFieldTileButton() => OnChangeTileMap(LandType.Farmland);
     public void OnChangeLivestockTileButton() => OnChangeTileMap(LandType.LivestockArea);
@@ -119,10 +121,12 @@ public class TileMapManager : MonoBehaviour
             case LandType.Farmland:
                 fieldMap.gameObject.SetActive(true);
                 livestockMap.gameObject.SetActive(false);
+                OnTileChanged?.Invoke(landType);
                 break;
             case LandType.LivestockArea:
                 fieldMap.gameObject.SetActive(false);
                 livestockMap.gameObject.SetActive(true);
+                OnTileChanged?.Invoke(landType);
                 break;
             default:
                 break;

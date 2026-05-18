@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 500;
     [SerializeField] List<SO_CropDefinition> cropDefinitionList;
+    [SerializeField] List<SO_LivestockDefinition> livestockDefinitionList;
     [SerializeField] List<SO_LandDefinition> landDefinitionList;
 
     private SO_CropDefinition selectCropDefinition;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnPlanted += Planted;
         tileMapManager.OnHarvested += Harvested;
+        tileMapManager.OnTileChanged += TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
         ResourceManager.Instance.OnFieldCountChanged += FieldChanged;
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
         ResourceManager.Instance.AddMoney(initializeMoney);
 
         // 各Manager初期化
-        uiManager.Initialize(this, cropDefinitionList);
+        uiManager.Initialize(cropDefinitionList, livestockDefinitionList, SetSelectedCrop);
         dateManager.Initialize();
         tileMapManager.Initialize();
         shopUIManager.Initialize(cropDefinitionList, landDefinitionList);
@@ -119,6 +121,16 @@ public class GameManager : MonoBehaviour
     }
 
     #region イベント
+    /// <summary>
+    /// タイル切り替え
+    /// </summary>
+    /// <param name="cellPos">タイルの座標</param>
+    void TileMapChanged(LandType landType)
+    {
+        uiManager.ChangeItemSelectList(landType);
+    }
+
+
     /// <summary>
     /// 作物を植える
     /// </summary>
@@ -213,6 +225,7 @@ public class GameManager : MonoBehaviour
         dateManager.OnDateChenged -= uiManager.UpdateDate;
         tileMapManager.OnPlanted -= Planted;
         tileMapManager.OnHarvested -= Harvested;
+        tileMapManager.OnTileChanged -= TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;
         ResourceManager.Instance.OnFieldCountChanged -= FieldChanged;

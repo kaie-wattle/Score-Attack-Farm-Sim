@@ -4,25 +4,40 @@ using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("-----Year-----")]
     [SerializeField] TMPro.TMP_Text yearText;
     [SerializeField] TMPro.TMP_Text monthText;
     [SerializeField] TMPro.TMP_Text moneyText;
-    [SerializeField] GameObject clearUI;
-
+    
+    [Header("-----Crop-----")]
+    [SerializeField] GameObject cropInfo;
     [SerializeField] Transform cropButtonParent;
     [SerializeField] CropButtonItem cropButtonItemPrefabs;
     [SerializeField] TMPro.TMP_Text selectedCropText;
 
+    [Header("-----Livestock-----")]
+    [SerializeField] GameObject livestockInfo;
+    [SerializeField] Transform livestockButtonParent;
+    [SerializeField] LivestockButtonItem livestockButtonItemPrefabs;
+    [SerializeField] TMPro.TMP_Text selectedLivestockText;
+
+    [Header("-----Score-----")]
     [SerializeField] Transform scoreDetailParent;
     [SerializeField] ScoreDetailItem scoreDetailItemPrefab;
 
-    private GameManager gameManager;
-    private List<CropButtonItem> cropButtons = new List<CropButtonItem>();
+    [Header("-----Clear-----")]
+    [SerializeField] GameObject clearUI;
 
-    public void Initialize(GameManager _gameManager, List<SO_CropDefinition> cropDefinitionList)
+    private UnityAction<SO_CropDefinition> cropDefinitionAction;
+    private List<CropButtonItem> cropButtons = new List<CropButtonItem>();
+    private List<LivestockButtonItem> livestockButtons = new List<LivestockButtonItem>();
+
+    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LivestockDefinition> livestockDefinitionList, UnityAction<SO_CropDefinition> _cropDefinitionAction)
     {
-        gameManager = _gameManager;
+        cropDefinitionAction = _cropDefinitionAction;
         ClearScoreDetails();
+        cropInfo.SetActive(true);
+        livestockInfo.SetActive(false);
         clearUI.SetActive(false);
         cropButtons.Clear();
 
@@ -31,8 +46,16 @@ public class UIManager : MonoBehaviour
         {
             var button = Instantiate(cropButtonItemPrefabs, cropButtonParent);
             button.SetCropButton(crop,0);
-            button.OnClikedEvent += _gameManager.SetSelectedCrop;
+            button.OnClikedEvent += cropDefinitionAction;
             cropButtons.Add(button);
+        }
+
+        selectedLivestockText.SetText("未選択");
+        foreach (var livestock in livestockDefinitionList)
+        {
+            var button = Instantiate(livestockButtonItemPrefabs, livestockButtonParent);
+            button.SetLivestockDefButton(livestock, 0);
+            livestockButtons.Add(button);
         }
     }
 
@@ -86,6 +109,29 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// アイテム選択リスト更新
+    /// </summary>
+    /// <param name="landType">タイルマップ種別</param>
+    public void ChangeItemSelectList(LandType landType)
+    {
+        switch (landType)
+        {
+            case LandType.Farmland:
+                cropInfo.SetActive(true);
+                livestockInfo.SetActive(false);
+                Debug.Log("農場押下");
+                break;
+            case LandType.LivestockArea:
+                cropInfo.SetActive(false);
+                livestockInfo.SetActive(true);
+                Debug.Log("畜産押下");
+                break;
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
     /// クリア画面表示
     /// </summary>
     /// <param name="result">スコア詳細情報</param>
@@ -134,8 +180,9 @@ public class UIManager : MonoBehaviour
     {
         foreach (var button in cropButtons)
         {
-            button.OnClikedEvent -= gameManager.SetSelectedCrop;
+            button.OnClikedEvent -= cropDefinitionAction;
         }
         cropButtons.Clear();
+        livestockButtons.Clear();
     }
 }
