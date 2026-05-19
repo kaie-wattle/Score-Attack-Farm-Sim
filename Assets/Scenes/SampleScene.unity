@@ -2350,6 +2350,7 @@ MonoBehaviour:
   shopLivestockButtonParent: {fileID: 1313413620}
   shopExpansionButtonParent: {fileID: 1170612405}
   shopButtonSeedItemPrefabs: {fileID: 5372273371689040338, guid: 04e97b56b84fa3a4eb3896a6ff6b4ea0, type: 3}
+  shopButtonLivestockItemPrefabs: {fileID: -3250463002939098580, guid: 79b6a9d6933ff1e4bb8a49c1238246f4, type: 3}
   shopButtonExpansionItemPrefabs: {fileID: 1433399915708707088, guid: 056156f2137b19245a8278ae32b146b4, type: 3}
   moneyText: {fileID: 545223953}
 --- !u!1 &851399774

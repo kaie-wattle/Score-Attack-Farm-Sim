@@ -93,6 +93,22 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 家畜保有状況更新
+    /// </summary>
+    /// <param name="_livestockDef"></param>
+    public void UpdateLivestockCount(SO_LivestockDefinition _livestockDef)
+    {
+        foreach (var button in livestockButtons)
+        {
+            if (button.LivestockDef == _livestockDef)
+            {
+                button.UpdateStockCount(ResourceManager.Instance.GetLivestockCount(_livestockDef));
+                break;
+            }
+        }
+    }
+
+    /// <summary>
     /// 選択中作物名更新
     /// </summary>
     /// <param name="_cropDef">作物情報</param>

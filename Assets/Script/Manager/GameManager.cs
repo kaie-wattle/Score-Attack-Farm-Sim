@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnTileChanged += TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
+        ResourceManager.Instance.OnLivestockInventoryChanged += LivestockChanged;
         ResourceManager.Instance.OnFieldCountChanged += FieldChanged;
         ResourceManager.Instance.OnLivestockAreaCountChanged += LivestockAreaChanged;
 
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
         uiManager.Initialize(cropDefinitionList, livestockDefinitionList, SetSelectedCrop);
         dateManager.Initialize();
         tileMapManager.Initialize();
-        shopUIManager.Initialize(cropDefinitionList, landDefinitionList);
+        shopUIManager.Initialize(cropDefinitionList, livestockDefinitionList, landDefinitionList);
 
         foreach (var cropDef in cropDefinitionList)
         {
@@ -67,8 +68,9 @@ public class GameManager : MonoBehaviour
         tileMapManager.UpdateTile();
 
         // 維持費計算
-        int seedCount = 10; // 仮
-        int cost = maintenanceManager.CalcCost(tileMapManager.GetFieldCount(), tileMapManager.GetPlantedCount(), seedCount);
+        int allLandCount = ResourceManager.Instance.FieldCount+ResourceManager.Instance.LivestockAreaCount;
+        int seedCount = ResourceManager.Instance.GetAllSeedCount();
+        int cost = maintenanceManager.CalcCost(allLandCount, tileMapManager.GetPlantedCount(), seedCount);
 
         // 支払い
         ResourceManager.Instance.AddMoney(-cost);
@@ -187,6 +189,15 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 家畜保有量更新
+    /// </summary>
+    /// <param name="livestockDef">家畜情報</param>
+    void LivestockChanged(SO_LivestockDefinition livestockDef)
+    {
+        uiManager.UpdateLivestockCount(livestockDef);
+    }
+
+    /// <summary>
     /// 耕地面積更新
     /// </summary>
     void FieldChanged()
@@ -200,6 +211,8 @@ public class GameManager : MonoBehaviour
     void LivestockAreaChanged()
     {
         tileMapManager.SetGlassTile();
+        // デバッグ用
+        ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
     }
     #endregion
 
@@ -211,8 +224,8 @@ public class GameManager : MonoBehaviour
         ScoreContext context = new ScoreContext
         {
             Money = ResourceManager.Instance.Money,
-            FieldCount = tileMapManager.GetFieldCount(),
-            LivestockArea = 0, // 未実装
+            FieldCount = ResourceManager.Instance.FieldCount,
+            LivestockArea = ResourceManager.Instance.LivestockAreaCount,
             IsNeverDebt = ResourceManager.Instance.IsNeverDebt,
             IsCropOnly = true // 仮
         };
@@ -228,6 +241,7 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnTileChanged -= TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;
+        ResourceManager.Instance.OnLivestockInventoryChanged -= LivestockChanged;
         ResourceManager.Instance.OnFieldCountChanged -= FieldChanged;
         ResourceManager.Instance.OnLivestockAreaCountChanged -= LivestockAreaChanged;
     }

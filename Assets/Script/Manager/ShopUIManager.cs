@@ -8,15 +8,17 @@ public class ShopUIManager : MonoBehaviour
     [SerializeField] GameObject shopLivestockButtonParent;
     [SerializeField] GameObject shopExpansionButtonParent;
     [SerializeField] ShopItemSeedButton shopButtonSeedItemPrefabs;
+    [SerializeField] ShopItemLivestockButton shopButtonLivestockItemPrefabs;
     [SerializeField] ShopItemExpansionButton shopButtonExpansionItemPrefabs;
     [SerializeField] TMPro.TMP_Text moneyText;
 
     private List<ShopItemSeedButton> shopSeedButtons = new List<ShopItemSeedButton>();
+    private List<ShopItemLivestockButton> shopLivestockButtons = new List<ShopItemLivestockButton>();
     private List<ShopItemExpansionButton> shopExpansionButtons = new List<ShopItemExpansionButton>();
     private int currentMoney;
     public int CurrentMoney => currentMoney;
 
-    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LandDefinition> landDefinitionList)
+    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LivestockDefinition> livestockDefinitionList, List<SO_LandDefinition> landDefinitionList)
     {
         shopSeedButtons.Clear();
         shopExpansionButtons.Clear();
@@ -48,6 +50,14 @@ public class ShopUIManager : MonoBehaviour
             var button = Instantiate(shopButtonExpansionItemPrefabs, shopExpansionButtonParent.transform);
             button.SetShopItemButton(stock, land);
             shopExpansionButtons.Add(button);
+        }
+
+        // â∆í{è§ïiÉäÉXÉg
+        foreach (var crop in livestockDefinitionList)
+        {
+            var button = Instantiate(shopButtonLivestockItemPrefabs, shopLivestockButtonParent.transform);
+            button.SetShopItemButton(25, crop);
+            shopLivestockButtons.Add(button);
         }
     }
 

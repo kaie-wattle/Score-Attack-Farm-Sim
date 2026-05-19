@@ -13,6 +13,7 @@ public class ResourceManager : MonoBehaviour
     public bool IsLivestockAreaMax => isLivestockAreaMax;
     public event UnityAction OnMoneyChanged;
     public event UnityAction<SO_CropDefinition> OnSeedInventoryChanged;
+    public event UnityAction<SO_LivestockDefinition> OnLivestockInventoryChanged;
     public event UnityAction OnFieldCountChanged;
     public event UnityAction OnLivestockAreaCountChanged;
 
@@ -20,9 +21,11 @@ public class ResourceManager : MonoBehaviour
     public int Money { get; private set; }
     /// <summary> 種子保有数 </summary>
     private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
+    /// <summary> 家畜保有数 </summary>
+    private Dictionary<SO_LivestockDefinition, int> livestockInventory = new Dictionary<SO_LivestockDefinition, int>();
     /// <summary> 耕地面積 </summary>
     public int FieldCount { get; private set; }
-    /// <summary> 耕地面積 </summary>
+    /// <summary> 畜産面積 </summary>
     public int LivestockAreaCount { get; private set; }
 
     private bool isNeverDebt;
@@ -77,6 +80,59 @@ public class ResourceManager : MonoBehaviour
     public int GetSeedCount(SO_CropDefinition cropDef)
     {
         return seedInventory.ContainsKey(cropDef) ? seedInventory[cropDef] : 0;
+    }
+
+    /// <summary>
+    /// 総保有種子数取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetAllSeedCount()
+    {
+        int count = 0;
+        foreach(var value in seedInventory.Values)
+        {
+            count += value;
+        }
+        return count;
+    }
+
+    /// <summary>
+    /// 保有家畜更新
+    /// </summary>
+    /// <param name="livestockDef"></param>
+    /// <param name="value"></param>
+    public void AddLivestock(SO_LivestockDefinition livestockDef, int value)
+    {
+        if (!livestockInventory.ContainsKey(livestockDef))
+        {
+            livestockInventory[livestockDef] = 0;
+        }
+        livestockInventory[livestockDef] += value;
+        OnLivestockInventoryChanged?.Invoke(livestockDef);
+    }
+
+    /// <summary>
+    /// 保有家畜数取得
+    /// </summary>
+    /// <param name="livestockDef"></param>
+    /// <returns></returns>
+    public int GetLivestockCount(SO_LivestockDefinition livestockDef)
+    {
+        return livestockInventory.ContainsKey(livestockDef) ? livestockInventory[livestockDef] : 0;
+    }
+
+    /// <summary>
+    /// 総保有家畜数取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetAllLivestockCount()
+    {
+        int count = 0;
+        foreach (var value in livestockInventory.Values)
+        {
+            count += value;
+        }
+        return count;
     }
 
     /// <summary>
@@ -136,6 +192,12 @@ public class ResourceManager : MonoBehaviour
         return ColMax * RowMax;
     }
 
+
+
+
+
+    /// <summary> 畜産面積 </summary>
+    public int FreeLivestockAreaCount { get; set; }
     /// <summary>
     /// TODO:デバッグ用
     /// </summary>
@@ -150,5 +212,13 @@ public class ResourceManager : MonoBehaviour
         {
             GUILayout.Label(pair.Key.name + " : " + pair.Value, myStyle);
         }
+        GUILayout.Label("AllSeedCount:" + GetAllSeedCount().ToString(), myStyle);
+
+        foreach (var pair in livestockInventory)
+        {
+            GUILayout.Label(pair.Key.name + " : " + pair.Value, myStyle);
+        }
+        GUILayout.Label("AllLivestockCount:" + GetAllLivestockCount().ToString(), myStyle);
+        GUILayout.Label("FreeLivestockAreaCount:" + FreeLivestockAreaCount.ToString(), myStyle);
     }
 }

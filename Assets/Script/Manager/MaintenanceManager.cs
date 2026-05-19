@@ -33,6 +33,7 @@ public class MaintenanceManager : MonoBehaviour
         ret += plantedFieldCount * plantedCost;
         // 保有種子のコスト
         ret += Mathf.Max(0, seedCount - freeSeedCount) * SeedCost;
+        Debug.Log(string.Format("維持費 土地保有面積:{0} 作付面積:{0} 総保有種子:{0}", fieldCount * fieldCost, plantedFieldCount * plantedCost, Mathf.Max(0, seedCount - freeSeedCount) * SeedCost));
         return ret;
     }
 }

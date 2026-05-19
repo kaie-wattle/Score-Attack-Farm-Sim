@@ -7,7 +7,7 @@ public class LivestockButtonItem : MonoBehaviour
     [SerializeField] TMPro.TMP_Text stockCountText;
 
     private SO_LivestockDefinition livestockDef;
-    public SO_LivestockDefinition LivestockDefDef => livestockDef;
+    public SO_LivestockDefinition LivestockDef => livestockDef;
 
     public void SetLivestockDefButton(SO_LivestockDefinition _livestockDef, int stockCount)
     {

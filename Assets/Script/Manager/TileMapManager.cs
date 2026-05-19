@@ -214,13 +214,22 @@ public class TileMapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// k’n–ÊÏ‚ğæ“¾
+    /// ‹ó‚«’{Y–ÊÏæ“¾
     /// </summary>
-    /// <returns>k’n–ÊÏ</returns>
-    public int GetFieldCount()
+    public int GetFreeLivestockTile()
     {
-        return fieldCells.Count;
+        int count = 0;
+        foreach (var cell in livestockCells.Values)
+        {
+            if (cell.livestockData == null)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
+
 
     /// <summary>
     /// ì•¨‚ªA‚¦‚ç‚ê‚Ä‚¢‚ék’n–ÊÏ‚ğæ“¾

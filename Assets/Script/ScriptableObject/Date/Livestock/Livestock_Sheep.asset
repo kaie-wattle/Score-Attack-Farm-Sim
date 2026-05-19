@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO_LivestockDefinition
   livestocklType: 4
   livestockName: "\u7F8A"
-  livestockPrice: 0
+  livestockPrice: 1000
   growMonths: 0
   animalProductPrice: 0
-  sellPrice: 0
+  sellPrice: 800
   feedConsumption: 0
   isAutoSold: 0
   livestockTile: {fileID: 11400000, guid: c61664a9dba996547b63fc2c42b73047, type: 2}
