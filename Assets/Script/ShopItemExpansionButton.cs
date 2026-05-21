@@ -12,6 +12,7 @@ public class ShopItemExpansionButton : ShopItemButtonItemBase
         sellPrice = landDef.sellPrice;
         itemName = landDef.landName;
         itemNameText.SetText(itemName);
+        itemPriceText.SetText(sellPrice.ToString() + "â~");
         buyCountText.SetText(buyCount.ToString());
         stockText.SetText("ç›å…:" + stock.ToString());
         UpdateInteractable();

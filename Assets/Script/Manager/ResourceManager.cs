@@ -196,7 +196,7 @@ public class ResourceManager : MonoBehaviour
 
 
 
-    /// <summary> ’{Y–ÊÏ </summary>
+    /// <summary> ‹ó’{Y–ÊÏ </summary>
     public int FreeLivestockAreaCount { get; set; }
     /// <summary>
     /// TODO:ƒfƒoƒbƒO—p

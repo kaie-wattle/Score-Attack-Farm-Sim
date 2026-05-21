@@ -18,7 +18,7 @@ public class ShopUIManager : MonoBehaviour
     private int currentMoney;
     public int CurrentMoney => currentMoney;
 
-    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LivestockDefinition> livestockDefinitionList, List<SO_LandDefinition> landDefinitionList)
+    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LivestockDefinition> livestockDefinitionList, List<SO_LandDefinition> landDefinitionList,int livestockStock)
     {
         shopSeedButtons.Clear();
         shopExpansionButtons.Clear();
@@ -53,10 +53,10 @@ public class ShopUIManager : MonoBehaviour
         }
 
         // 家畜商品リスト
-        foreach (var crop in livestockDefinitionList)
+        foreach (var livestock in livestockDefinitionList)
         {
             var button = Instantiate(shopButtonLivestockItemPrefabs, shopLivestockButtonParent.transform);
-            button.SetShopItemButton(25, crop);
+            button.SetShopItemButton(livestockStock, livestock);
             shopLivestockButtons.Add(button);
         }
     }
@@ -72,9 +72,26 @@ public class ShopUIManager : MonoBehaviour
             button.UpdateInteractable();
         }
 
+        foreach (var button in shopLivestockButtons)
+        {
+            button.UpdateInteractable();
+        }
+
         foreach (var button in shopExpansionButtons)
         {
             button.UpdateInteractable();
+        }
+    }
+
+    /// <summary>
+    /// 在庫更新
+    /// </summary>
+    public void UpdateStock(int stock)
+    {
+        foreach (var button in shopLivestockButtons)
+        {
+            button.UpdateStock(stock);
+            button.ResetBuyCount();
         }
     }
 

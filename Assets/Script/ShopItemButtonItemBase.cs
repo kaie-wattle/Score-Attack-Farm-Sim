@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class ShopItemButtonItemBase : MonoBehaviour
 {
     [SerializeField] protected TMPro.TMP_Text itemNameText;
+    [SerializeField] protected TMPro.TMP_Text itemPriceText;
     [SerializeField] protected TMPro.TMP_Text buyCountText;
     [SerializeField] protected TMPro.TMP_Text stockText;
     [SerializeField] protected Button buyButton;
@@ -14,6 +15,10 @@ public class ShopItemButtonItemBase : MonoBehaviour
     protected int sellPrice;
     protected string itemName;
 
+
+    /// <summary>
+    /// 押下可否更新
+    /// </summary>
     public void UpdateInteractable()
     {
         if (buyCount == 0)
@@ -34,6 +39,19 @@ public class ShopItemButtonItemBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 在庫更新
+    /// </summary>
+    /// <param name="stock">在庫</param>
+    public void UpdateStock(int stock)
+    {
+        this.stock = stock;
+        stockText.SetText("在庫:" + stock.ToString());
+    }
+
+    /// <summary>
+    /// 購入数リセット
+    /// </summary>
     public void ResetBuyCount()
     {
         buyCount = 0;
@@ -56,6 +74,7 @@ public class ShopItemButtonItemBase : MonoBehaviour
         UpdateInteractable();
     }
 
+    #region ボタン押下処理
     public void OnPlusButton()
     {
         AddBuyCount(1);
@@ -75,4 +94,6 @@ public class ShopItemButtonItemBase : MonoBehaviour
     {
         AddBuyCount(-10);
     }
+    #endregion
+
 }

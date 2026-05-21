@@ -12,6 +12,7 @@ public class ShopItemLivestockButton : ShopItemButtonItemBase
         sellPrice = livestockDef.livestockPrice;
         itemName = livestockDef.livestockName;
         itemNameText.SetText(itemName);
+        itemPriceText.SetText(sellPrice.ToString() + "â~");
         buyCountText.SetText(buyCount.ToString());
         stockText.SetText("ç›å…:" + stock.ToString());
         UpdateInteractable();

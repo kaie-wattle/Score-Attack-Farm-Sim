@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
         uiManager.Initialize(cropDefinitionList, livestockDefinitionList, SetSelectedCrop);
         dateManager.Initialize();
         tileMapManager.Initialize();
-        shopUIManager.Initialize(cropDefinitionList, livestockDefinitionList, landDefinitionList);
+        shopUIManager.Initialize(cropDefinitionList, livestockDefinitionList, landDefinitionList, tileMapManager.GetFreeLivestockTile());
 
         foreach (var cropDef in cropDefinitionList)
         {
@@ -211,7 +211,8 @@ public class GameManager : MonoBehaviour
     void LivestockAreaChanged()
     {
         tileMapManager.SetGlassTile();
-        // デバッグ用
+        shopUIManager.UpdateStock(tileMapManager.GetFreeLivestockTile());
+        //デバッグ用
         ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
     }
     #endregion

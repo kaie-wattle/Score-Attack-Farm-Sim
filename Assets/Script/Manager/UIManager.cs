@@ -7,8 +7,10 @@ public class UIManager : MonoBehaviour
     [Header("-----Year-----")]
     [SerializeField] TMPro.TMP_Text yearText;
     [SerializeField] TMPro.TMP_Text monthText;
+
+    [Header("-----Money-----")]
     [SerializeField] TMPro.TMP_Text moneyText;
-    
+
     [Header("-----Crop-----")]
     [SerializeField] GameObject cropInfo;
     [SerializeField] Transform cropButtonParent;
@@ -45,7 +47,7 @@ public class UIManager : MonoBehaviour
         foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(cropButtonItemPrefabs, cropButtonParent);
-            button.SetCropButton(crop,0);
+            button.SetCropButton(crop, 0);
             button.OnClikedEvent += cropDefinitionAction;
             cropButtons.Add(button);
         }
@@ -73,7 +75,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateMoney()
     {
-        moneyText.SetText(ResourceManager.Instance.Money.ToString());
+        moneyText.SetText(ResourceManager.Instance.Money.ToString() + "‰~");
     }
 
     /// <summary>
@@ -84,7 +86,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (var button in cropButtons)
         {
-            if(button.CropDef == _cropDef)
+            if (button.CropDef == _cropDef)
             {
                 button.UpdateSeedCount(ResourceManager.Instance.GetSeedCount(_cropDef));
                 break;
