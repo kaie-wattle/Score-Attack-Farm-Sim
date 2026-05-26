@@ -13,7 +13,7 @@ public class ResourceManager : MonoBehaviour
     public bool IsLivestockAreaMax => isLivestockAreaMax;
     public event UnityAction OnMoneyChanged;
     public event UnityAction<SO_CropDefinition> OnSeedInventoryChanged;
-    public event UnityAction<SO_LivestockDefinition> OnLivestockInventoryChanged;
+    public event UnityAction<SO_LivestockDefinition,int> OnLivestockInventoryChanged;
     public event UnityAction OnFieldCountChanged;
     public event UnityAction OnLivestockAreaCountChanged;
 
@@ -108,7 +108,7 @@ public class ResourceManager : MonoBehaviour
             livestockInventory[livestockDef] = 0;
         }
         livestockInventory[livestockDef] += value;
-        OnLivestockInventoryChanged?.Invoke(livestockDef);
+        OnLivestockInventoryChanged?.Invoke(livestockDef, value);
     }
 
     /// <summary>

@@ -188,6 +188,30 @@ public class TileMapManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 家畜を配置する
+    /// </summary>
+    /// <param name="livestockDef">タイルの座標</param>
+    /// <param name="value">選択されている作物</param>
+    public void SetLivestock(SO_LivestockDefinition livestockDef, int value)
+    {
+        int count = 0;
+        foreach (var cell in livestockCells.Values)
+        {
+            if (cell.livestockData == null)
+            {
+                cell.livestockData = new LivestockData(livestockDef);
+                livestockMap.SetTile(cell.cellPos, livestockDef.livestockTile);
+                count++;
+                if(value <= count)
+                {
+                    Debug.Log("配置完了");
+                    break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// 農地拡張
     /// </summary>
     public void SetGroundTile()

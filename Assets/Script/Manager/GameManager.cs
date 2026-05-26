@@ -192,9 +192,13 @@ public class GameManager : MonoBehaviour
     /// 家畜保有量更新
     /// </summary>
     /// <param name="livestockDef">家畜情報</param>
-    void LivestockChanged(SO_LivestockDefinition livestockDef)
+    void LivestockChanged(SO_LivestockDefinition livestockDef,int value)
     {
         uiManager.UpdateLivestockCount(livestockDef);
+        tileMapManager.SetLivestock(livestockDef, value);
+        shopUIManager.UpdateStock(tileMapManager.GetFreeLivestockTile());
+        //デバッグ用
+        ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
     }
 
     /// <summary>
