@@ -12,6 +12,8 @@ public class ResourceManager : MonoBehaviour
     public bool IsFieldMax => isFieldMax;
     public bool IsLivestockAreaMax => isLivestockAreaMax;
     public event UnityAction OnMoneyChanged;
+    public event UnityAction OnFeedChanged;
+    public event UnityAction OnDirtinessChanged;
     public event UnityAction<SO_CropDefinition> OnSeedInventoryChanged;
     public event UnityAction<SO_LivestockDefinition,int> OnLivestockInventoryChanged;
     public event UnityAction OnFieldCountChanged;
@@ -19,6 +21,10 @@ public class ResourceManager : MonoBehaviour
 
     /// <summary> 所持金 </summary>
     public int Money { get; private set; }
+    /// <summary> 餌保有量 </summary>
+    public int Feed { get; private set; }
+    /// <summary> 汚れ </summary>
+    public int Dirtiness { get; private set; }
     /// <summary> 種子保有数 </summary>
     private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
     /// <summary> 家畜保有数 </summary>
@@ -57,6 +63,27 @@ public class ResourceManager : MonoBehaviour
         OnMoneyChanged?.Invoke();
     }
 
+    /// <summary>
+    /// 所持餌更新
+    /// </summary>
+    /// <param name="value"></param>
+    public void AddFeed(int value)
+    {
+        Feed += value;
+
+        OnFeedChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// 汚れ更新
+    /// </summary>
+    /// <param name="value"></param>
+    public void AddDirtiness(int value)
+    {
+        Dirtiness += value;
+
+        OnDirtinessChanged?.Invoke();
+    }
     /// <summary>
     /// 保有種子更新
     /// </summary>

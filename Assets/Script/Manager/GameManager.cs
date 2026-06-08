@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] ShopUIManager shopUIManager;
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 500;
+    [SerializeField] int initializeFeed = 500;
     [SerializeField] List<SO_CropDefinition> cropDefinitionList;
     [SerializeField] List<SO_LivestockDefinition> livestockDefinitionList;
     [SerializeField] List<SO_LandDefinition> landDefinitionList;
@@ -29,12 +30,16 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnIncomeAdded += IncomeAdded;
         tileMapManager.OnTileChanged += TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
+        ResourceManager.Instance.OnFeedChanged += FeedChanged;
+        ResourceManager.Instance.OnDirtinessChanged += DirtinessChanged;
         ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
         ResourceManager.Instance.OnLivestockInventoryChanged += LivestockChanged;
         ResourceManager.Instance.OnFieldCountChanged += FieldChanged;
         ResourceManager.Instance.OnLivestockAreaCountChanged += LivestockAreaChanged;
 
         ResourceManager.Instance.AddMoney(initializeMoney);
+        ResourceManager.Instance.AddFeed(initializeFeed);
+        ResourceManager.Instance.AddDirtiness(0);
 
         // 各Manager初期化
         uiManager.Initialize(cropDefinitionList, livestockDefinitionList, SetSelectedCrop);
@@ -180,6 +185,24 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 所持餌更新
+    /// </summary>
+    void FeedChanged()
+    {
+        uiManager.UpdateFeed();
+        Debug.Log("餌変更");
+    }
+
+    /// <summary>
+    /// 汚れ更新
+    /// </summary>
+    void DirtinessChanged()
+    {
+        uiManager.UpdateDirtiness();
+        Debug.Log("汚れ変更");
+    }
+
+    /// <summary>
     /// 種子保有量更新
     /// </summary>
     /// <param name="cropDef">作物情報</param>
@@ -248,6 +271,8 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnIncomeAdded -= IncomeAdded;
         tileMapManager.OnTileChanged -= TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
+        ResourceManager.Instance.OnFeedChanged -= FeedChanged;
+        ResourceManager.Instance.OnDirtinessChanged -= DirtinessChanged;
         ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;
         ResourceManager.Instance.OnLivestockInventoryChanged -= LivestockChanged;
         ResourceManager.Instance.OnFieldCountChanged -= FieldChanged;

@@ -11,6 +11,12 @@ public class UIManager : MonoBehaviour
     [Header("-----Money-----")]
     [SerializeField] TMPro.TMP_Text moneyText;
 
+    [Header("-----Feed-----")]
+    [SerializeField] TMPro.TMP_Text feedText;
+
+    [Header("-----Dirtiness-----")]
+    [SerializeField] TMPro.TMP_Text dirtinessText;
+
     [Header("-----Crop-----")]
     [SerializeField] GameObject cropInfo;
     [SerializeField] Transform cropButtonParent;
@@ -42,6 +48,8 @@ public class UIManager : MonoBehaviour
         livestockInfo.SetActive(false);
         clearUI.SetActive(false);
         cropButtons.Clear();
+        UpdateFeed();
+        UpdateDirtiness();
 
         selectedCropText.SetText("未選択");
         foreach (var crop in cropDefinitionList)
@@ -76,6 +84,22 @@ public class UIManager : MonoBehaviour
     public void UpdateMoney()
     {
         moneyText.SetText(ResourceManager.Instance.Money.ToString() + "円");
+    }
+
+    /// <summary>
+    /// 所持餌更新
+    /// </summary>
+    public void UpdateFeed()
+    {
+        feedText.SetText(ResourceManager.Instance.Feed.ToString());
+    }
+
+    /// <summary>
+    /// 汚れ更新
+    /// </summary>
+    public void UpdateDirtiness()
+    {
+        dirtinessText.SetText(ResourceManager.Instance.Dirtiness.ToString());
     }
 
     /// <summary>
