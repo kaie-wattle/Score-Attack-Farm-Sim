@@ -16,7 +16,7 @@ MonoBehaviour:
   livestockName: "\u725B"
   livestockPrice: 3000
   growMonths: 0
-  animalProductPrice: 0
+  animalProductPrice: 700
   sellPrice: 2000
   feedConsumption: 0
   isAutoSold: 0

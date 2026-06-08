@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO_LivestockDefinition
   livestocklType: 4
   livestockName: "\u7F8A"
-  livestockPrice: 1000
+  livestockPrice: 2000
   growMonths: 0
-  animalProductPrice: 0
+  animalProductPrice: 200
   sellPrice: 800
   feedConsumption: 0
   isAutoSold: 0

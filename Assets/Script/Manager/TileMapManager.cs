@@ -178,14 +178,20 @@ public class TileMapManager : MonoBehaviour
                 if (cell.livestockData.growthStage >= cell.livestockData.so_LivestockDefinition.growMonths)
                 {
                     // ê¨í∑ÇµÇ´Ç¡ÇΩÇÁîÑãpÇ∑ÇÈ
-                    Debug.Log(cell.livestockData.so_LivestockDefinition.sellPrice);
                     OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.sellPrice);
                     cell.livestockData = null;
                     livestockMap.SetTile(cell.cellPos, glassTile);
                     ResourceManager.Instance.AddLivestock(definition, -1);
-                    Debug.Log("â∆í{ÇîÑãpÇµÇ‹ÇµÇΩÅB");
+                    Debug.Log("â∆í{ÇîÑãpÇµÇ‹ÇµÇΩÅB:"+ definition.sellPrice);
                 }
             }
+            else
+            {
+                // â∆í{ÇÃê∂ê¨ï®älìæ
+                OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.animalProductPrice);
+                Debug.Log("â∆í{ÇÃê∂ê¨ï®ÇälìæÇµÇ‹ÇµÇΩÅB:" + cell.livestockData.so_LivestockDefinition.animalProductPrice);
+            }
+
         }
     }
 
