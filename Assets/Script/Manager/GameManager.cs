@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         // イベント設定
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnPlanted += Planted;
-        tileMapManager.OnHarvested += Harvested;
+        tileMapManager.OnIncomeAdded += IncomeAdded;
         tileMapManager.OnTileChanged += TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged += SeedChanged;
@@ -152,10 +152,10 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 収穫された
+    /// 収入獲得
     /// </summary>
     /// <param name="income">収入</param>
-    void Harvested(int income)
+    void IncomeAdded(int income)
     {
         ResourceManager.Instance.AddMoney(income);
     }
@@ -195,7 +195,10 @@ public class GameManager : MonoBehaviour
     void LivestockChanged(SO_LivestockDefinition livestockDef,int value)
     {
         uiManager.UpdateLivestockCount(livestockDef);
-        tileMapManager.SetLivestock(livestockDef, value);
+        if(value > 0)
+        {
+            tileMapManager.SetLivestock(livestockDef, value);
+        }
         shopUIManager.UpdateStock(tileMapManager.GetFreeLivestockTile());
         //デバッグ用
         ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
@@ -242,7 +245,7 @@ public class GameManager : MonoBehaviour
     {
         dateManager.OnDateChenged -= uiManager.UpdateDate;
         tileMapManager.OnPlanted -= Planted;
-        tileMapManager.OnHarvested -= Harvested;
+        tileMapManager.OnIncomeAdded -= IncomeAdded;
         tileMapManager.OnTileChanged -= TileMapChanged;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
         ResourceManager.Instance.OnSeedInventoryChanged -= SeedChanged;

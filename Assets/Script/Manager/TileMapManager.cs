@@ -18,9 +18,9 @@ public class TileMapManager : MonoBehaviour
 
     /// <summary> 耕作イベント </summary>
     public event UnityAction<Vector3Int> OnPlanted;
-    /// <summary> 収穫イベント </summary>
-    public event UnityAction<int> OnHarvested;
-    /// <summary> 収穫イベント </summary>
+    /// <summary> 収入獲得イベント </summary>
+    public event UnityAction<int> OnIncomeAdded;
+    /// <summary> タイル切り替えイベント </summary>
     public event UnityAction<LandType> OnTileChanged;
 
     public void OnChangeFieldTileButton() => OnChangeTileMap(LandType.Farmland);
@@ -134,9 +134,9 @@ public class TileMapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// タイル状況を更新
+    /// 農地タイル更新
     /// </summary>
-    public void UpdateTile()
+    void UpdateFieldTile()
     {
         foreach (var cell in fieldCells.Values)
         {
@@ -151,12 +151,51 @@ public class TileMapManager : MonoBehaviour
             {
                 // 成長しきったら収穫する
                 Debug.Log(cell.cropData.so_CropDefinition.sellPrice);
-                OnHarvested?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
+                OnIncomeAdded?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
                 cell.cropData = null;
                 fieldMap.SetTile(cell.cellPos, groundTile);
                 Debug.Log("収穫しました。");
             }
         }
+    }
+
+    /// <summary>
+    /// 畜産タイル更新
+    /// </summary>
+    void UpdateLivestockTile()
+    {
+        foreach(var cell in livestockCells.Values)
+        {
+            if(cell.livestockData == null)
+            {
+                continue;
+            }
+            SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
+            // 成長する家畜の場合、成長させる。
+            if (cell.livestockData.so_LivestockDefinition.growMonths != 0)
+            {
+                cell.livestockData.growthStage++;
+                if (cell.livestockData.growthStage >= cell.livestockData.so_LivestockDefinition.growMonths)
+                {
+                    // 成長しきったら売却する
+                    Debug.Log(cell.livestockData.so_LivestockDefinition.sellPrice);
+                    OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.sellPrice);
+                    cell.livestockData = null;
+                    livestockMap.SetTile(cell.cellPos, glassTile);
+                    ResourceManager.Instance.AddLivestock(definition, -1);
+                    Debug.Log("家畜を売却しました。");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// タイル状況を更新
+    /// </summary>
+    public void UpdateTile()
+    {
+        UpdateFieldTile();
+        UpdateLivestockTile();
     }
 
     /// <summary>
