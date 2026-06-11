@@ -171,6 +171,9 @@ public class TileMapManager : MonoBehaviour
                 continue;
             }
             SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
+            ResourceManager.Instance.AddFeed(-definition.feedConsumption);
+            var dirtiness = Random.Range(1,5);
+            ResourceManager.Instance.AddDirtiness(dirtiness);
             // ê¨í∑Ç∑ÇÈâ∆í{ÇÃèÍçáÅAê¨í∑Ç≥ÇπÇÈÅB
             if (cell.livestockData.so_LivestockDefinition.growMonths != 0)
             {

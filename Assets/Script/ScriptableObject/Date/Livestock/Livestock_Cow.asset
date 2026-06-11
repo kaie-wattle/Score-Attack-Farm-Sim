@@ -18,6 +18,6 @@ MonoBehaviour:
   growMonths: 0
   animalProductPrice: 700
   sellPrice: 2000
-  feedConsumption: 0
+  feedConsumption: 10
   isAutoSold: 0
   livestockTile: {fileID: 11400000, guid: 721f230b4dce56847ae1ca3733ef87d1, type: 2}
