@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] UIManager uiManager;
     [SerializeField] DateManager dateManager;
     [SerializeField] TileMapManager tileMapManager;
+    [SerializeField] IncomeAndExpensesManager incomeAndExpensesManager;
     [SerializeField] MaintenanceManager maintenanceManager;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] ShopUIManager shopUIManager;
@@ -84,6 +85,14 @@ public class GameManager : MonoBehaviour
         {
             GameClear();
         }
+    }
+
+    /// <summary>
+    /// ûx‰æ–Ê•\¦ƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
+    /// </summary>
+    public void OnIncomeAndExpensesViewButton()
+    {
+        incomeAndExpensesManager.gameObject.SetActive(true);
     }
 
     /// <summary>
