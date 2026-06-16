@@ -19,7 +19,7 @@ public class TileMapManager : MonoBehaviour
     /// <summary> 耕作イベント </summary>
     public event UnityAction<Vector3Int> OnPlanted;
     /// <summary> 収入獲得イベント </summary>
-    public event UnityAction<int> OnIncomeAdded;
+    public event UnityAction<int, IncomeType> OnIncomeAdded;
     /// <summary> タイル切り替えイベント </summary>
     public event UnityAction<LandType> OnTileChanged;
 
@@ -151,7 +151,7 @@ public class TileMapManager : MonoBehaviour
             {
                 // 成長しきったら収穫する
                 Debug.Log(cell.cropData.so_CropDefinition.sellPrice);
-                OnIncomeAdded?.Invoke(cell.cropData.so_CropDefinition.sellPrice);
+                OnIncomeAdded?.Invoke(cell.cropData.so_CropDefinition.sellPrice, IncomeType.Crop);
                 cell.cropData = null;
                 fieldMap.SetTile(cell.cellPos, groundTile);
                 Debug.Log("収穫しました。");
@@ -181,7 +181,7 @@ public class TileMapManager : MonoBehaviour
                 if (cell.livestockData.growthStage >= cell.livestockData.so_LivestockDefinition.growMonths)
                 {
                     // 成長しきったら売却する
-                    OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.sellPrice);
+                    OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.sellPrice, IncomeType.Livestock);
                     cell.livestockData = null;
                     livestockMap.SetTile(cell.cellPos, glassTile);
                     ResourceManager.Instance.AddLivestock(definition, -1);
@@ -191,7 +191,7 @@ public class TileMapManager : MonoBehaviour
             else
             {
                 // 家畜の生成物獲得
-                OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.animalProductPrice);
+                OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.animalProductPrice, IncomeType.Livestock);
                 Debug.Log("家畜の生成物を獲得しました。:" + cell.livestockData.so_LivestockDefinition.animalProductPrice);
             }
 

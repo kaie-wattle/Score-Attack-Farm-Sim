@@ -34,7 +34,7 @@ public class ShopItemExpansionButton : ShopItemButtonItemBase
             switch(landDef.landType)
             {
                 case LandType.Farmland:
-                    ResourceManager.Instance.AddMoney(-cost);
+                    InvokeOnExpensed(cost,ExpenseType.Shop);
                     ResourceManager.Instance.AddField(buyCount);
                     stock -= buyCount;
                     buyCount = 0;
@@ -44,8 +44,8 @@ public class ShopItemExpansionButton : ShopItemButtonItemBase
                     Debug.Log("î_ínÇägí£ÇµÇ‹ÇµÇΩÅB");
                     break;
                 case LandType.LivestockArea:
+                    InvokeOnExpensed(cost, ExpenseType.Shop);
                     Debug.Log("í{éYÉGÉäÉAÇägí£ÇµÇ‹ÇµÇΩÅB");
-                    ResourceManager.Instance.AddMoney(-cost);
                     ResourceManager.Instance.AddLivestockArea(buyCount);
                     stock -= buyCount;
                     buyCount = 0;

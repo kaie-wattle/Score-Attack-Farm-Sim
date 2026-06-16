@@ -31,7 +31,7 @@ public class ShopItemSeedButton : ShopItemButtonItemBase
         }
         else
         {
-            ResourceManager.Instance.AddMoney(-cost);
+            InvokeOnExpensed(cost, ExpenseType.Shop);
             ResourceManager.Instance.AddSeed(cropDef, buyCount);
             stock -= buyCount;
             buyCount = 0;

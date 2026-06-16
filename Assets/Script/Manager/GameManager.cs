@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("----------Mamager----------")]
     [SerializeField] UIManager uiManager;
     [SerializeField] DateManager dateManager;
     [SerializeField] TileMapManager tileMapManager;
@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] MaintenanceManager maintenanceManager;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] ShopUIManager shopUIManager;
+    [Header("---------------------------")]
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 500;
     [SerializeField] int initializeFeed = 500;
@@ -46,7 +47,8 @@ public class GameManager : MonoBehaviour
         uiManager.Initialize(cropDefinitionList, livestockDefinitionList, SetSelectedCrop);
         dateManager.Initialize();
         tileMapManager.Initialize();
-        shopUIManager.Initialize(cropDefinitionList, livestockDefinitionList, landDefinitionList, tileMapManager.GetFreeLivestockTile());
+        shopUIManager.Initialize(cropDefinitionList, livestockDefinitionList, landDefinitionList, tileMapManager.GetFreeLivestockTile(), ExpenseAdded);
+        incomeAndExpensesManager.Initialize();
 
         foreach (var cropDef in cropDefinitionList)
         {
@@ -81,6 +83,8 @@ public class GameManager : MonoBehaviour
         // éxï•Ç¢
         ResourceManager.Instance.AddMoney(-cost);
 
+        incomeAndExpensesManager.SaveReportData(dateManager.Year, dateManager.Month);
+
         if (IsGameClear())
         {
             GameClear();
@@ -92,7 +96,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnIncomeAndExpensesViewButton()
     {
-        incomeAndExpensesManager.gameObject.SetActive(true);
+        incomeAndExpensesManager.ReportActive();
     }
 
     /// <summary>
@@ -169,9 +173,21 @@ public class GameManager : MonoBehaviour
     /// é˚ì¸älìæ
     /// </summary>
     /// <param name="income">é˚ì¸</param>
-    void IncomeAdded(int income)
+    void IncomeAdded(int income, IncomeType incomeType)
     {
         ResourceManager.Instance.AddMoney(income);
+        incomeAndExpensesManager.SetIncomeData(income, incomeType);
+    }
+
+    /// <summary>
+    /// îÔópåvè„
+    /// </summary>
+    /// <param name="expense"></param>
+    /// <param name="expenseType"></param>
+    void ExpenseAdded(int expense, ExpenseType expenseType)
+    {
+        ResourceManager.Instance.AddMoney(-expense);
+        incomeAndExpensesManager.SetExpenseData(expense, expenseType);
     }
 
     /// <summary>

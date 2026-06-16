@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ShopUIManager : MonoBehaviour
 {
@@ -12,23 +13,37 @@ public class ShopUIManager : MonoBehaviour
     [SerializeField] ShopItemExpansionButton shopButtonExpansionItemPrefabs;
     [SerializeField] TMPro.TMP_Text moneyText;
 
+    public event UnityAction<int, ExpenseType> OnExpensed;
+    public int CurrentMoney => currentMoney;
+
     private List<ShopItemSeedButton> shopSeedButtons = new List<ShopItemSeedButton>();
     private List<ShopItemLivestockButton> shopLivestockButtons = new List<ShopItemLivestockButton>();
     private List<ShopItemExpansionButton> shopExpansionButtons = new List<ShopItemExpansionButton>();
     private int currentMoney;
-    public int CurrentMoney => currentMoney;
+    
 
-    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LivestockDefinition> livestockDefinitionList, List<SO_LandDefinition> landDefinitionList,int livestockStock)
+    public void Initialize(List<SO_CropDefinition> cropDefinitionList, List<SO_LivestockDefinition> livestockDefinitionList, List<SO_LandDefinition> landDefinitionList,int livestockStock,UnityAction<int,ExpenseType> _onExpensed)
     {
         shopSeedButtons.Clear();
         shopExpansionButtons.Clear();
+        OnExpensed = _onExpensed;
 
         // 種子商品リスト
         foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(shopButtonSeedItemPrefabs, shopSeedButtonParent.transform);
             button.SetShopItemButton(25,crop);
+            button.OnExpensed += OnExpensed;
             shopSeedButtons.Add(button);
+        }
+
+        // 家畜商品リスト
+        foreach (var livestock in livestockDefinitionList)
+        {
+            var button = Instantiate(shopButtonLivestockItemPrefabs, shopLivestockButtonParent.transform);
+            button.SetShopItemButton(livestockStock, livestock);
+            button.OnExpensed += OnExpensed;
+            shopLivestockButtons.Add(button);
         }
 
         // 土地拡張リスト
@@ -49,15 +64,8 @@ public class ShopUIManager : MonoBehaviour
             }
             var button = Instantiate(shopButtonExpansionItemPrefabs, shopExpansionButtonParent.transform);
             button.SetShopItemButton(stock, land);
+            button.OnExpensed += OnExpensed;
             shopExpansionButtons.Add(button);
-        }
-
-        // 家畜商品リスト
-        foreach (var livestock in livestockDefinitionList)
-        {
-            var button = Instantiate(shopButtonLivestockItemPrefabs, shopLivestockButtonParent.transform);
-            button.SetShopItemButton(livestockStock, livestock);
-            shopLivestockButtons.Add(button);
         }
     }
 
@@ -134,5 +142,24 @@ public class ShopUIManager : MonoBehaviour
         shopSeedButtonParent.SetActive(false);
         shopLivestockButtonParent.SetActive(false);
         shopExpansionButtonParent.SetActive(true);
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var button in shopSeedButtons)
+        {
+            button.OnExpensed -= OnExpensed;
+        }
+        foreach (var button in shopLivestockButtons)
+        {
+            button.OnExpensed -= OnExpensed;
+        }
+        foreach (var button in shopExpansionButtons)
+        {
+            button.OnExpensed -= OnExpensed;
+        }
+        shopSeedButtons.Clear();
+        shopLivestockButtons.Clear();
+        shopExpansionButtons.Clear();
     }
 }

@@ -31,7 +31,7 @@ public class ShopItemLivestockButton : ShopItemButtonItemBase
         }
         else
         {
-            ResourceManager.Instance.AddMoney(-cost);
+            InvokeOnExpensed(cost, ExpenseType.Shop);
             ResourceManager.Instance.AddLivestock(livestockDef, buyCount);
             stock -= buyCount;
             buyCount = 0;

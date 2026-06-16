@@ -8,9 +8,8 @@ public class ResourceManager : MonoBehaviour
     [SerializeField] int RowMax;
     public static ResourceManager Instance { get; private set; }
 
-    public bool IsNeverDebt => isNeverDebt;
-    public bool IsFieldMax => isFieldMax;
-    public bool IsLivestockAreaMax => isLivestockAreaMax;
+    
+    #region アクション
     public event UnityAction OnMoneyChanged;
     public event UnityAction OnFeedChanged;
     public event UnityAction OnDirtinessChanged;
@@ -18,22 +17,29 @@ public class ResourceManager : MonoBehaviour
     public event UnityAction<SO_LivestockDefinition,int> OnLivestockInventoryChanged;
     public event UnityAction OnFieldCountChanged;
     public event UnityAction OnLivestockAreaCountChanged;
+    #endregion
 
+    #region プロパティ
     /// <summary> 所持金 </summary>
     public int Money { get; private set; }
     /// <summary> 餌保有量 </summary>
     public int Feed { get; private set; }
     /// <summary> 汚れ </summary>
     public int Dirtiness { get; private set; }
-    /// <summary> 種子保有数 </summary>
-    private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
-    /// <summary> 家畜保有数 </summary>
-    private Dictionary<SO_LivestockDefinition, int> livestockInventory = new Dictionary<SO_LivestockDefinition, int>();
     /// <summary> 耕地面積 </summary>
     public int FieldCount { get; private set; }
     /// <summary> 畜産面積 </summary>
     public int LivestockAreaCount { get; private set; }
+    #endregion
 
+    public bool IsNeverDebt => isNeverDebt;
+    public bool IsFieldMax => isFieldMax;
+    public bool IsLivestockAreaMax => isLivestockAreaMax;
+
+    /// <summary> 種子保有数 </summary>
+    private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
+    /// <summary> 家畜保有数 </summary>
+    private Dictionary<SO_LivestockDefinition, int> livestockInventory = new Dictionary<SO_LivestockDefinition, int>();
     private bool isNeverDebt;
     private bool isFieldMax;
     private bool isLivestockAreaMax;

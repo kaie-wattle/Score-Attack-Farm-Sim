@@ -10,11 +10,12 @@ public class ShopItemButtonItemBase : MonoBehaviour
     [SerializeField] protected TMPro.TMP_Text stockText;
     [SerializeField] protected Button buyButton;
 
+    public event UnityAction<int, ExpenseType> OnExpensed;
+
     protected int buyCount;
     protected int stock;
     protected int sellPrice;
     protected string itemName;
-
 
     /// <summary>
     /// 押下可否更新
@@ -72,6 +73,11 @@ public class ShopItemButtonItemBase : MonoBehaviour
         buyCount = Mathf.Max(buyCount, 0);
         buyCountText.SetText(buyCount.ToString());
         UpdateInteractable();
+    }
+
+    protected void InvokeOnExpensed(int value,ExpenseType expenseType)
+    {
+        OnExpensed?.Invoke(value, expenseType);
     }
 
     #region ボタン押下処理
