@@ -182,6 +182,9 @@ MonoBehaviour:
   CropIncomeText: {fileID: 631059817}
   LivestockIncomeText: {fileID: 1022476740}
   ShopExpenseText: {fileID: 1849417029}
+  SeedstockExpenseText: {fileID: 754110642}
+  LandExpenseText: {fileID: 764937397}
+  FieldWaterExpenseText: {fileID: 703966014}
 --- !u!1 &57404417
 GameObject:
   m_ObjectHideFlags: 0

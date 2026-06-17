@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// 維持費管理クラス
@@ -17,6 +18,8 @@ public class MaintenanceManager : MonoBehaviour
     /// <summary> 種子1つ当たりのコスト </summary>
     [SerializeField] int SeedCost = 5;
 
+    public event UnityAction<int, ExpenseType> OnExpensed;
+
     /// <summary>
     /// 維持費計算
     /// </summary>
@@ -28,12 +31,16 @@ public class MaintenanceManager : MonoBehaviour
     {
         int ret = 0;
         // 保有面積のコスト
-        ret += fieldCount* fieldCost;
+        int landCost = fieldCount * fieldCost;
+        OnExpensed?.Invoke(landCost, ExpenseType.Land);
         // 作物を植えている面積のコスト
-        ret += plantedFieldCount * plantedCost;
+        int fieldWaterCost = plantedFieldCount *plantedCost;
+        OnExpensed?.Invoke(fieldWaterCost, ExpenseType.FieldWater);
         // 保有種子のコスト
-        ret += Mathf.Max(0, seedCount - freeSeedCount) * SeedCost;
-        Debug.Log(string.Format("維持費 土地保有面積:{0} 作付面積:{0} 総保有種子:{0}", fieldCount * fieldCost, plantedFieldCount * plantedCost, Mathf.Max(0, seedCount - freeSeedCount) * SeedCost));
+        int seedStockCost = Mathf.Max(0, seedCount - freeSeedCount) * SeedCost;
+        OnExpensed?.Invoke(seedStockCost, ExpenseType.Seed);
+        Debug.Log(string.Format("維持費 土地保有面積:{0} 作付面積:{0} 総保有種子:{0}", landCost, fieldWaterCost, seedStockCost));
+        ret = landCost + fieldWaterCost + seedStockCost;
         return ret;
     }
 }

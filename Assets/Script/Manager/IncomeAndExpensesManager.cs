@@ -34,8 +34,10 @@ public class IncomeAndExpensesManager : MonoBehaviour
     [SerializeField] TMPro.TMP_Text IncomeTitleText;
     [SerializeField] TMPro.TMP_Text CropIncomeText;
     [SerializeField] TMPro.TMP_Text LivestockIncomeText;
-
     [SerializeField] TMPro.TMP_Text ShopExpenseText;
+    [SerializeField] TMPro.TMP_Text SeedstockExpenseText;
+    [SerializeField] TMPro.TMP_Text LandExpenseText;
+    [SerializeField] TMPro.TMP_Text FieldWaterExpenseText;
 
     public struct MonthlyReport
     {
@@ -44,6 +46,9 @@ public class IncomeAndExpensesManager : MonoBehaviour
         public int cropIncome;
         public int livestockIncome;
         public int shopExpense;
+        public int seedStockExpense;
+        public int landExpense;
+        public int fieldWaterExpense;
     }
 
     List<MonthlyReport> monthlyReports = new List<MonthlyReport>();
@@ -53,6 +58,9 @@ public class IncomeAndExpensesManager : MonoBehaviour
     int currentLivestockIncome;
 
     int currentShopExpense;
+    int currentSeedStockExpense;
+    int currentLandExpense;
+    int currentFieldWaterExpense;
 
     public void Initialize()
     {
@@ -80,13 +88,16 @@ public class IncomeAndExpensesManager : MonoBehaviour
         switch (expenseType)
         {
             case ExpenseType.Shop:
-                currentShopExpense = value;
+                currentShopExpense += value;
                 break;
             case ExpenseType.Seed:
+                currentSeedStockExpense += value;
                 break;
             case ExpenseType.Land:
+                currentLandExpense += value;
                 break;
             case ExpenseType.FieldWater:
+                currentFieldWaterExpense += value;
                 break;
             default:
                 break;
@@ -121,17 +132,23 @@ public class IncomeAndExpensesManager : MonoBehaviour
 
     void SetReportData(int year, int month)
     {
-        MonthlyReport currentReport;
+        MonthlyReport currentReport = new MonthlyReport();
         currentReport.year = year;
         currentReport.month = month;
         currentReport.cropIncome = currentCropIncome;
         currentReport.livestockIncome = currentLivestockIncome;
         currentReport.shopExpense = currentShopExpense;
+        currentReport.seedStockExpense = currentSeedStockExpense;
+        currentReport.landExpense = currentLandExpense;
+        currentReport.fieldWaterExpense = currentFieldWaterExpense;
+
         monthlyReports.Insert(0,currentReport);
 
         currentCropIncome = 0;
         currentLivestockIncome = 0;
-
+        currentShopExpense = 0;
+        currentSeedStockExpense = 0;
+        currentLandExpense = 0;
         currentShopExpense = 0;
     }
 
@@ -153,6 +170,9 @@ public class IncomeAndExpensesManager : MonoBehaviour
         CropIncomeText.SetText(currentReport.cropIncome.ToString());
         LivestockIncomeText.SetText(currentReport.livestockIncome.ToString());
         ShopExpenseText.SetText(currentReport.shopExpense.ToString());
+        SeedstockExpenseText.SetText(currentReport.seedStockExpense.ToString());
+        LandExpenseText.SetText(currentReport.landExpense.ToString());
+        FieldWaterExpenseText.SetText(currentReport.fieldWaterExpense.ToString());
     }
 
     void ChangeButtonActive()

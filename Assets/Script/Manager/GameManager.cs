@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnPlanted += Planted;
         tileMapManager.OnIncomeAdded += IncomeAdded;
         tileMapManager.OnTileChanged += TileMapChanged;
+        maintenanceManager.OnExpensed += ExpenseAdded;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
         ResourceManager.Instance.OnFeedChanged += FeedChanged;
         ResourceManager.Instance.OnDirtinessChanged += DirtinessChanged;
@@ -206,7 +207,7 @@ public class GameManager : MonoBehaviour
     {
         uiManager.UpdateMoney();
         shopUIManager.UpdateMoney();
-        Debug.Log("Ç®ã‡ïœçX");
+        //Debug.Log("Ç®ã‡ïœçX");
     }
 
     /// <summary>
@@ -295,6 +296,7 @@ public class GameManager : MonoBehaviour
         tileMapManager.OnPlanted -= Planted;
         tileMapManager.OnIncomeAdded -= IncomeAdded;
         tileMapManager.OnTileChanged -= TileMapChanged;
+        maintenanceManager.OnExpensed -= ExpenseAdded;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;
         ResourceManager.Instance.OnFeedChanged -= FeedChanged;
         ResourceManager.Instance.OnDirtinessChanged -= DirtinessChanged;
