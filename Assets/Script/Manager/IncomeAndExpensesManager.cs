@@ -73,10 +73,10 @@ public class IncomeAndExpensesManager : MonoBehaviour
         switch (incomeType)
         {
             case IncomeType.Crop:
-                currentCropIncome = value;
+                currentCropIncome += value;
                 break;
             case IncomeType.Livestock:
-                currentLivestockIncome = value;
+                currentLivestockIncome += value;
                 break;
             default:
                 break;

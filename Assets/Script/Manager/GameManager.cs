@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnPlanted += Planted;
         tileMapManager.OnIncomeAdded += IncomeAdded;
+        tileMapManager.OnExpensed += ExpenseAdded;
         tileMapManager.OnTileChanged += TileMapChanged;
         maintenanceManager.OnExpensed += ExpenseAdded;
         ResourceManager.Instance.OnMoneyChanged += MoneyChanged;
@@ -57,6 +58,8 @@ public class GameManager : MonoBehaviour
             ResourceManager.Instance.AddSeed(cropDef, 5);
             uiManager.UpdateSeedCount(cropDef);
         }
+
+        TileMapChanged(LandType.Farmland);
     }
 
     // Update is called once per frame
@@ -295,6 +298,7 @@ public class GameManager : MonoBehaviour
         dateManager.OnDateChenged -= uiManager.UpdateDate;
         tileMapManager.OnPlanted -= Planted;
         tileMapManager.OnIncomeAdded -= IncomeAdded;
+        tileMapManager.OnExpensed -= ExpenseAdded;
         tileMapManager.OnTileChanged -= TileMapChanged;
         maintenanceManager.OnExpensed -= ExpenseAdded;
         ResourceManager.Instance.OnMoneyChanged -= MoneyChanged;

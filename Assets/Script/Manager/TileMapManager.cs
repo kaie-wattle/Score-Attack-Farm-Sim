@@ -10,16 +10,22 @@ public class TileMapManager : MonoBehaviour
     [SerializeField] Tilemap livestockMap;
     [SerializeField] Tile glassTile;
     [SerializeField] Tile groundTile;
+    [SerializeField] int cleaningCost;
+    [SerializeField] TMPro.TMP_Text sellFlagText;
 
     Camera mainCamera;
     Dictionary<Vector3Int, FieldCellData> fieldCells;
     Dictionary<Vector3Int, LivestockAreaCellData> livestockCells;
     Vector3Int StartPos = new Vector3Int(-7, -4, 0);
+    int MinCleaningCost = 50;
+    bool sellFlag = false;
 
     /// <summary> 耕作イベント </summary>
     public event UnityAction<Vector3Int> OnPlanted;
     /// <summary> 収入獲得イベント </summary>
     public event UnityAction<int, IncomeType> OnIncomeAdded;
+    /// <summary> 支出イベント </summary>
+    public event UnityAction<int, ExpenseType> OnExpensed;
     /// <summary> タイル切り替えイベント </summary>
     public event UnityAction<LandType> OnTileChanged;
 
@@ -100,13 +106,53 @@ public class TileMapManager : MonoBehaviour
         pos.z = 0;
         if (fieldMap.gameObject.activeInHierarchy)
         {
-            var cellPos = fieldMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
-
-            OnPlanted?.Invoke(cellPos);
+            ClickField(pos);
         }
         else if (livestockMap.gameObject.activeInHierarchy)
         {
+            ClickLivestockArea(pos);
+        }
+    }
 
+    /// <summary>
+    /// 畑クリック処理
+    /// </summary>
+    /// <param name="pos"></param>
+    void ClickField(Vector3 pos)
+    {
+        var cellPos = fieldMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
+
+        OnPlanted?.Invoke(cellPos);
+    }
+
+    /// <summary>
+    /// 畜産エリアクリック処理
+    /// </summary>
+    /// <param name="pos"></param>
+    void ClickLivestockArea(Vector3 pos)
+    {
+        var cellPos = livestockMap.WorldToCell(mainCamera.ScreenToWorldPoint(pos));
+        if (!livestockCells.TryGetValue(cellPos, out var cell))
+        {
+            // 存在しないタイルをクリックした場合は処理しない
+            Debug.Log("タイルがない");
+            return;
+        }
+
+        if(sellFlag)
+        {
+            SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
+            if (definition.growMonths != 0)
+            {
+                OnIncomeAdded?.Invoke(definition.livestockPrice, IncomeType.Livestock);
+            }
+            else
+            {
+                OnIncomeAdded?.Invoke(definition.sellPrice, IncomeType.Livestock);
+            }
+            cell.livestockData = null;
+            livestockMap.SetTile(cell.cellPos, glassTile);
+            ResourceManager.Instance.AddLivestock(definition, -1);
         }
     }
 
@@ -116,7 +162,7 @@ public class TileMapManager : MonoBehaviour
     /// <param name="landType">タイルマップ種別</param>
     void OnChangeTileMap(LandType landType)
     {
-        switch(landType)
+        switch (landType)
         {
             case LandType.Farmland:
                 fieldMap.gameObject.SetActive(true);
@@ -164,15 +210,15 @@ public class TileMapManager : MonoBehaviour
     /// </summary>
     void UpdateLivestockTile()
     {
-        foreach(var cell in livestockCells.Values)
+        foreach (var cell in livestockCells.Values)
         {
-            if(cell.livestockData == null)
+            if (cell.livestockData == null)
             {
                 continue;
             }
             SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
             ResourceManager.Instance.AddFeed(-definition.feedConsumption);
-            var dirtiness = Random.Range(1,5);
+            var dirtiness = Random.Range(1, 5);
             ResourceManager.Instance.AddDirtiness(dirtiness);
             // 成長する家畜の場合、成長させる。
             if (cell.livestockData.so_LivestockDefinition.growMonths != 0)
@@ -185,7 +231,7 @@ public class TileMapManager : MonoBehaviour
                     cell.livestockData = null;
                     livestockMap.SetTile(cell.cellPos, glassTile);
                     ResourceManager.Instance.AddLivestock(definition, -1);
-                    Debug.Log("家畜を売却しました。:"+ definition.sellPrice);
+                    Debug.Log("家畜を売却しました。:" + definition.sellPrice);
                 }
             }
             else
@@ -250,7 +296,7 @@ public class TileMapManager : MonoBehaviour
                 cell.livestockData = new LivestockData(livestockDef);
                 livestockMap.SetTile(cell.cellPos, livestockDef.livestockTile);
                 count++;
-                if(value <= count)
+                if (value <= count)
                 {
                     Debug.Log("配置完了");
                     break;
@@ -316,5 +362,27 @@ public class TileMapManager : MonoBehaviour
                 ret++;
         }
         return ret;
+    }
+
+    public void OnSellLivestock()
+    {
+        sellFlag = !sellFlag;
+        if(sellFlag)
+        {
+            Debug.Log("売却フラグON");
+            sellFlagText.SetText("売却選択中");
+        }
+        else
+        {
+            Debug.Log("売却フラグOFF");
+            sellFlagText.SetText("");
+        }
+    }
+
+    public void OnCleaning()
+    {
+        int cost = (cleaningCost * ResourceManager.Instance.Dirtiness) + MinCleaningCost;
+        OnExpensed?.Invoke(cost, ExpenseType.Land);
+        ResourceManager.Instance.AddDirtiness(-ResourceManager.Instance.Dirtiness);
     }
 }

@@ -90,6 +90,7 @@ public class ResourceManager : MonoBehaviour
 
         OnDirtinessChanged?.Invoke();
     }
+
     /// <summary>
     /// 保有種子更新
     /// </summary>

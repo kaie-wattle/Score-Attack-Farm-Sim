@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -27,7 +28,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject livestockInfo;
     [SerializeField] Transform livestockButtonParent;
     [SerializeField] LivestockButtonItem livestockButtonItemPrefabs;
-    [SerializeField] TMPro.TMP_Text selectedLivestockText;
+    [SerializeField] Button sellLivestockButton;
+    [SerializeField] Button cleaningButton;
 
     [Header("-----Score-----")]
     [SerializeField] Transform scoreDetailParent;
@@ -60,7 +62,6 @@ public class UIManager : MonoBehaviour
             cropButtons.Add(button);
         }
 
-        selectedLivestockText.SetText("ñ¢ëIë");
         foreach (var livestock in livestockDefinitionList)
         {
             var button = Instantiate(livestockButtonItemPrefabs, livestockButtonParent);
@@ -161,11 +162,15 @@ public class UIManager : MonoBehaviour
             case LandType.Farmland:
                 cropInfo.SetActive(true);
                 livestockInfo.SetActive(false);
+                sellLivestockButton.gameObject.SetActive(false);
+                cleaningButton.gameObject.SetActive(false);
                 Debug.Log("î_èÍâüâ∫");
                 break;
             case LandType.LivestockArea:
                 cropInfo.SetActive(false);
                 livestockInfo.SetActive(true);
+                sellLivestockButton.gameObject.SetActive(true);
+                cleaningButton.gameObject.SetActive(true);
                 Debug.Log("í{éYâüâ∫");
                 break;
             default:
