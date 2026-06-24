@@ -223,6 +223,7 @@ public class TileMapManager : MonoBehaviour
     /// </summary>
     void UpdateLivestockTile()
     {
+        int totalDirtiness = 0;
         foreach (var cell in livestockCells.Values)
         {
             if (cell.livestockData == null)
@@ -231,7 +232,7 @@ public class TileMapManager : MonoBehaviour
             }
             SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
             int dirtiness = Random.Range(1, 5);
-            ResourceManager.Instance.AddDirtiness(dirtiness);
+            totalDirtiness += dirtiness;
 
             // ‰a‚ª‚È‚¢ê‡‚Í‰Æ’{‚ª‰ì€‚·‚é
             if (ResourceManager.Instance.Feed <= 0)
@@ -240,6 +241,7 @@ public class TileMapManager : MonoBehaviour
                 cell.livestockData = null;
                 livestockMap.SetTile(cell.cellPos, glassTile);
                 ResourceManager.Instance.AddLivestock(definition, -1);
+                totalDirtiness += 1000;
                 continue;
             }
 
@@ -271,12 +273,21 @@ public class TileMapManager : MonoBehaviour
             }
             else
             {
+                // û“üŒvZ
+                int rand = Random.Range(-20, 50);
+                int dirtinessPenalty = (ResourceManager.Instance.Dirtiness / 50);
+                float incomeRate = (100 + rand - dirtinessPenalty) / 100f;
+                incomeRate = Mathf.Max(incomeRate, 0.1f);
+                int income = (int)(cell.livestockData.so_LivestockDefinition.animalProductPrice * incomeRate);
+                Debug.Log("¡‰ñ‚ÌŠ„‡:" + incomeRate);
                 // ‰Æ’{‚Ì¶¬•¨Šl“¾
-                OnIncomeAdded?.Invoke(cell.livestockData.so_LivestockDefinition.animalProductPrice, IncomeType.Livestock);
-                Debug.Log("‰Æ’{‚Ì¶¬•¨‚ğŠl“¾‚µ‚Ü‚µ‚½B:" + cell.livestockData.so_LivestockDefinition.animalProductPrice);
+                OnIncomeAdded?.Invoke(income, IncomeType.Livestock);
+                Debug.Log("‰Æ’{‚Ì¶¬•¨‚ğŠl“¾‚µ‚Ü‚µ‚½B:" + income);
             }
 
         }
+        Debug.Log("‰˜‚ê‡Œv:" + totalDirtiness);
+        ResourceManager.Instance.AddDirtiness(totalDirtiness);
     }
 
     /// <summary>
