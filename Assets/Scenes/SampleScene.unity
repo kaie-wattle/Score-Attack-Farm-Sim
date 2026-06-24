@@ -1763,6 +1763,7 @@ MonoBehaviour:
   landDefinitionList:
   - {fileID: 11400000, guid: 47752f819589c0a4c90496fb29c36fbb, type: 2}
   - {fileID: 11400000, guid: 6605e56cd1b3eb342910195cec00835a, type: 2}
+  shopButton: {fileID: 889315098}
 --- !u!4 &253628020
 Transform:
   m_ObjectHideFlags: 0

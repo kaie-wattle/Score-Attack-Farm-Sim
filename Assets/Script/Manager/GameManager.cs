@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<SO_CropDefinition> cropDefinitionList;
     [SerializeField] List<SO_LivestockDefinition> livestockDefinitionList;
     [SerializeField] List<SO_LandDefinition> landDefinitionList;
+    [SerializeField] GameObject shopButton;
 
     private SO_CropDefinition selectCropDefinition;
 
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
         }
 
         TileMapChanged(LandType.Farmland);
+        shopButton.SetActive(true);
     }
 
     // Update is called once per frame
@@ -92,6 +94,18 @@ public class GameManager : MonoBehaviour
         if (IsGameClear())
         {
             GameClear();
+        }
+
+        if(dateManager.Month % 3 == 1)
+        {
+            shopUIManager.UpdateSeedStock();
+            shopUIManager.UpdateFeedStock();
+            shopButton.SetActive(true);
+            Debug.Log("ショップ在庫更新");
+        }
+        else
+        {
+            shopButton.SetActive(false);
         }
     }
 
@@ -251,7 +265,7 @@ public class GameManager : MonoBehaviour
         {
             tileMapManager.SetLivestock(livestockDef, value);
         }
-        shopUIManager.UpdateStock(tileMapManager.GetFreeLivestockTile());
+        shopUIManager.UpdateLivestockStock(tileMapManager.GetFreeLivestockTile());
         //デバッグ用
         ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
     }
@@ -270,7 +284,7 @@ public class GameManager : MonoBehaviour
     void LivestockAreaChanged()
     {
         tileMapManager.SetGlassTile();
-        shopUIManager.UpdateStock(tileMapManager.GetFreeLivestockTile());
+        shopUIManager.UpdateLivestockStock(tileMapManager.GetFreeLivestockTile());
         //デバッグ用
         ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
     }

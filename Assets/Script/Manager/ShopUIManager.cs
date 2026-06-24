@@ -34,14 +34,16 @@ public class ShopUIManager : MonoBehaviour
         foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(shopButtonSeedItemPrefabs, shopSeedButtonParent.transform);
-            button.SetShopItemButton(25,crop);
+            int stock = Random.Range(5, 30);
+            button.SetShopItemButton(stock, crop);
             button.OnExpensed += OnExpensed;
             shopSeedButtons.Add(button);
         }
 
         // 家畜商品リスト
         var feedButton = Instantiate(shopButtonFeedItemPrefabs, shopLivestockButtonParent.transform);
-        feedButton.SetShopItemButton(2000);
+        int feedStock = Random.Range(1, 6) * 500;
+        feedButton.SetShopItemButton(feedStock);
         feedButton.OnExpensed += OnExpensed;
         shopFeedButtons.Add(feedButton);
 
@@ -105,12 +107,38 @@ public class ShopUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 在庫更新
+    /// 種子在庫更新
     /// </summary>
-    public void UpdateStock(int stock)
+    public void UpdateSeedStock()
+    {
+        foreach (var button in shopSeedButtons)
+        {
+            int stock = Random.Range(5, 30);
+            button.UpdateStock(stock);
+            button.ResetBuyCount();
+        }
+    }
+
+    /// <summary>
+    /// 家畜在庫更新
+    /// </summary>
+    public void UpdateLivestockStock(int stock)
     {
         foreach (var button in shopLivestockButtons)
         {
+            button.UpdateStock(stock);
+            button.ResetBuyCount();
+        }
+    }
+
+    /// <summary>
+    /// 家畜飼料在庫更新
+    /// </summary>
+    public void UpdateFeedStock()
+    {
+        foreach (var button in shopFeedButtons)
+        {
+            int stock = Random.Range(1, 6) * 500;
             button.UpdateStock(stock);
             button.ResetBuyCount();
         }
