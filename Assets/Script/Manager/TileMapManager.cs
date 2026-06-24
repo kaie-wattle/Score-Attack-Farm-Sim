@@ -124,7 +124,6 @@ public class TileMapManager : MonoBehaviour
 
         OnPlanted?.Invoke(cellPos);
     }
-
     /// <summary>
     /// 畜産エリアクリック処理
     /// </summary>
@@ -138,21 +137,34 @@ public class TileMapManager : MonoBehaviour
             Debug.Log("タイルがない");
             return;
         }
-
-        if(sellFlag)
+        if (cell.livestockData == null)
         {
-            SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
-            if (definition.growMonths != 0)
+            Debug.Log("タイル未設定");
+            return;
+        }
+
+        SO_LivestockDefinition livestockDefinition = cell.livestockData.so_LivestockDefinition;
+        int sellPrice;
+        Debug.Log(livestockDefinition.livestockName);
+
+        if (sellFlag)
+        {
+            if (livestockDefinition.growMonths != 0)
             {
-                OnIncomeAdded?.Invoke(definition.livestockPrice, IncomeType.Livestock);
+                sellPrice = livestockDefinition.livestockPrice;
             }
             else
             {
-                OnIncomeAdded?.Invoke(definition.sellPrice, IncomeType.Livestock);
+                sellPrice = livestockDefinition.sellPrice;
             }
-            cell.livestockData = null;
-            livestockMap.SetTile(cell.cellPos, glassTile);
-            ResourceManager.Instance.AddLivestock(definition, -1);
+            string message = string.Format("{0}を売却します。よろしいですか？\n値段:{1}", livestockDefinition.livestockName,sellPrice);
+            ConfirmPopup.instance.Show(message, () =>
+            {
+                OnIncomeAdded?.Invoke(sellPrice, IncomeType.Livestock);
+                cell.livestockData = null;
+                livestockMap.SetTile(cell.cellPos, glassTile);
+                ResourceManager.Instance.AddLivestock(livestockDefinition, -1);
+            });
         }
     }
 
@@ -367,7 +379,7 @@ public class TileMapManager : MonoBehaviour
     public void OnSellLivestock()
     {
         sellFlag = !sellFlag;
-        if(sellFlag)
+        if (sellFlag)
         {
             Debug.Log("売却フラグON");
             sellFlagText.SetText("売却選択中");
