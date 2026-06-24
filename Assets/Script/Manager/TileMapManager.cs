@@ -124,6 +124,7 @@ public class TileMapManager : MonoBehaviour
 
         OnPlanted?.Invoke(cellPos);
     }
+
     /// <summary>
     /// ’{YƒGƒŠƒAƒNƒŠƒbƒNˆ—
     /// </summary>
@@ -229,9 +230,31 @@ public class TileMapManager : MonoBehaviour
                 continue;
             }
             SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
-            ResourceManager.Instance.AddFeed(-definition.feedConsumption);
-            var dirtiness = Random.Range(1, 5);
+            int dirtiness = Random.Range(1, 5);
             ResourceManager.Instance.AddDirtiness(dirtiness);
+
+            // ‰a‚ª‚È‚¢ê‡‚Í‰Æ’{‚ª‰ì€‚·‚é
+            if (ResourceManager.Instance.Feed <= 0)
+            {
+                Debug.Log("‰a‚ª–³‚©‚Á‚½‚Ì‚Å‰Æ’{‚ª‰ì€‚µ‚Ü‚µ‚½B");
+                cell.livestockData = null;
+                livestockMap.SetTile(cell.cellPos, glassTile);
+                ResourceManager.Instance.AddLivestock(definition, -1);
+                continue;
+            }
+
+            int feed = definition.feedConsumption;
+            if(ResourceManager.Instance.Feed >= feed)
+            {
+                ResourceManager.Instance.AddFeed(-definition.feedConsumption);
+            }
+            else
+            {
+                ResourceManager.Instance.AddFeed(-ResourceManager.Instance.Feed);
+                Debug.Log("‰a‚ª‘«‚è‚Ü‚¹‚ñ‚Å‚µ‚½B");
+                continue;
+            }
+
             // ¬’·‚·‚é‰Æ’{‚Ìê‡A¬’·‚³‚¹‚éB
             if (cell.livestockData.so_LivestockDefinition.growMonths != 0)
             {
