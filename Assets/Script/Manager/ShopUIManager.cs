@@ -10,6 +10,7 @@ public class ShopUIManager : MonoBehaviour
     [SerializeField] GameObject shopExpansionButtonParent;
     [SerializeField] ShopItemSeedButton shopButtonSeedItemPrefabs;
     [SerializeField] ShopItemLivestockButton shopButtonLivestockItemPrefabs;
+    [SerializeField] ShopItemFeedButton shopButtonFeedItemPrefabs;
     [SerializeField] ShopItemExpansionButton shopButtonExpansionItemPrefabs;
     [SerializeField] TMPro.TMP_Text moneyText;
 
@@ -18,6 +19,7 @@ public class ShopUIManager : MonoBehaviour
 
     private List<ShopItemSeedButton> shopSeedButtons = new List<ShopItemSeedButton>();
     private List<ShopItemLivestockButton> shopLivestockButtons = new List<ShopItemLivestockButton>();
+    private List<ShopItemFeedButton> shopFeedButtons = new List<ShopItemFeedButton>();
     private List<ShopItemExpansionButton> shopExpansionButtons = new List<ShopItemExpansionButton>();
     private int currentMoney;
     
@@ -38,6 +40,12 @@ public class ShopUIManager : MonoBehaviour
         }
 
         // â∆í{è§ïiÉäÉXÉg
+        var feedButton = Instantiate(shopButtonFeedItemPrefabs, shopLivestockButtonParent.transform);
+        feedButton.SetShopItemButton(2000);
+        feedButton.OnExpensed += OnExpensed;
+        shopFeedButtons.Add(feedButton);
+
+
         foreach (var livestock in livestockDefinitionList)
         {
             var button = Instantiate(shopButtonLivestockItemPrefabs, shopLivestockButtonParent.transform);
@@ -85,6 +93,11 @@ public class ShopUIManager : MonoBehaviour
             button.UpdateInteractable();
         }
 
+        foreach (var button in shopFeedButtons)
+        {
+            button.UpdateInteractable();
+        }
+
         foreach (var button in shopExpansionButtons)
         {
             button.UpdateInteractable();
@@ -113,6 +126,16 @@ public class ShopUIManager : MonoBehaviour
     {
         shopUI.SetActive(false);
         foreach (var button in shopSeedButtons)
+        {
+            button.ResetBuyCount();
+        }
+
+        foreach (var button in shopLivestockButtons)
+        {
+            button.ResetBuyCount();
+        }
+
+        foreach (var button in shopFeedButtons)
         {
             button.ResetBuyCount();
         }
@@ -154,12 +177,17 @@ public class ShopUIManager : MonoBehaviour
         {
             button.OnExpensed -= OnExpensed;
         }
+        foreach (var button in shopFeedButtons)
+        {
+            button.OnExpensed -= OnExpensed;
+        }
         foreach (var button in shopExpansionButtons)
         {
             button.OnExpensed -= OnExpensed;
         }
         shopSeedButtons.Clear();
         shopLivestockButtons.Clear();
+        shopFeedButtons.Clear();
         shopExpansionButtons.Clear();
     }
 }
