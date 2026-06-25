@@ -35,8 +35,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform scoreDetailParent;
     [SerializeField] ScoreDetailItem scoreDetailItemPrefab;
 
-    [Header("-----Clear-----")]
+    [Header("-----GameEnd-----")]
     [SerializeField] GameObject clearUI;
+    [SerializeField] GameObject gameOverUI;
 
     private UnityAction<SO_CropDefinition> cropDefinitionAction;
     private List<CropButtonItem> cropButtons = new List<CropButtonItem>();
@@ -49,6 +50,7 @@ public class UIManager : MonoBehaviour
         cropInfo.SetActive(true);
         livestockInfo.SetActive(false);
         clearUI.SetActive(false);
+        gameOverUI.SetActive(false);
         cropButtons.Clear();
         UpdateFeed();
         UpdateDirtiness();
@@ -179,10 +181,18 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// ゲームオーバー画面表示
+    /// </summary>
+    public void ShowGameOverUI()
+    {
+        gameOverUI.SetActive(true);
+    }
+
+    /// <summary>
     /// クリア画面表示
     /// </summary>
     /// <param name="result">スコア詳細情報</param>
-    public void UpdateClearUI(ScoreResult result)
+    public void ShowClearUI(ScoreResult result)
     {
         ClearScoreDetails();
         clearUI.SetActive(true);

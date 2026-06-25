@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,8 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject shopButton;
 
     private SO_CropDefinition selectCropDefinition;
-
-    public SO_CropDefinition SelectCropDefinition => selectCropDefinition;
+    private int gameOverCount;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -71,6 +71,89 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 選択中作物設定
+    /// </summary>
+    /// <param name="_cropDef"></param>
+    void SetSelectedCrop(SO_CropDefinition _cropDef)
+    {
+        selectCropDefinition = _cropDef;
+        uiManager.UpdateSelectedCrop(selectCropDefinition);
+        Debug.Log("選択した作物：" + (selectCropDefinition != null ? selectCropDefinition.cropName : "未選択"));
+    }
+
+    /// <summary>
+    /// ゲームオーバー判定
+    /// </summary>
+    /// <returns></returns>
+    bool IsGameOver()
+    {
+        if (ResourceManager.Instance.Money < 0)
+        {
+            gameOverCount++;
+        }
+        else
+        {
+            gameOverCount = 0;
+        }
+
+        return gameOverCount == 5;
+    }
+
+    void GameOver()
+    {
+        uiManager.ShowGameOverUI();
+    }
+
+    /// <summary>
+    /// ゲームクリア判定
+    /// </summary>
+    /// <returns>true:ゲームクリア false:未クリア</returns>
+    bool IsGameClear()
+    {
+        return dateManager.Year >= endYear && dateManager.Month >= 4;
+    }
+
+    /// <summary>
+    /// ゲームクリア
+    /// </summary>
+    void GameClear()
+    {
+        ScoreContext context = new ScoreContext
+        {
+            Money = ResourceManager.Instance.Money,
+            FieldCount = ResourceManager.Instance.FieldCount,
+            LivestockArea = ResourceManager.Instance.LivestockAreaCount,
+            IsNeverDebt = ResourceManager.Instance.IsNeverDebt,
+            IsCropOnly = true // 仮
+        };
+        ScoreResult score = scoreManager.CalcScore(context);
+        uiManager.ShowClearUI(score);
+    }
+
+    /// <summary>
+    /// 種子消費
+    /// </summary>
+    /// <param name="cropDef">作物情報</param>
+    void UseSeed(SO_CropDefinition cropDef)
+    {
+        if (ResourceManager.Instance.GetSeedCount(cropDef) <= 0)
+        {
+            // 念のためここでも種子の残量確認をする
+            SetSelectedCrop(null);
+            return;
+        }
+
+        ResourceManager.Instance.AddSeed(cropDef, -1);
+        uiManager.UpdateSeedCount(cropDef);
+        if (ResourceManager.Instance.GetSeedCount(cropDef) <= 0)
+        {
+            selectCropDefinition = null;
+            SetSelectedCrop(null);
+        }
+    }
+
+    #region ボタン押下イベント
+    /// <summary>
     /// 次の月ボタン押下処理
     /// </summary>
     public void OnNextDateClick()
@@ -82,21 +165,30 @@ public class GameManager : MonoBehaviour
         tileMapManager.UpdateTile();
 
         // 維持費計算
-        int allLandCount = ResourceManager.Instance.FieldCount+ResourceManager.Instance.LivestockAreaCount;
+        int allLandCount = ResourceManager.Instance.FieldCount + ResourceManager.Instance.LivestockAreaCount;
         int seedCount = ResourceManager.Instance.GetAllSeedCount();
         int cost = maintenanceManager.CalcCost(allLandCount, tileMapManager.GetPlantedCount(), seedCount);
 
         // 支払い
         ResourceManager.Instance.AddMoney(-cost);
 
+        // 収支データ作成
         incomeAndExpensesManager.SaveReportData(dateManager.Year, dateManager.Month);
+
+
+        // ゲームエンド判定
+        if (IsGameOver())
+        {
+            GameOver();
+        }
 
         if (IsGameClear())
         {
             GameClear();
         }
 
-        if(dateManager.Month % 3 == 1)
+        // ショップ情報更新
+        if (dateManager.Month % 3 == 1)
         {
             shopUIManager.UpdateSeedStock();
             shopUIManager.UpdateFeedStock();
@@ -124,39 +216,7 @@ public class GameManager : MonoBehaviour
     {
         shopUIManager.ShopActive();
     }
-
-    /// <summary>
-    /// 選択中作物設定
-    /// </summary>
-    /// <param name="_cropDef"></param>
-    public void SetSelectedCrop(SO_CropDefinition _cropDef)
-    {
-        selectCropDefinition = _cropDef;
-        uiManager.UpdateSelectedCrop(selectCropDefinition);
-        Debug.Log("選択した作物：" + (selectCropDefinition != null ? selectCropDefinition.cropName : "未選択"));
-    }
-
-    /// <summary>
-    /// 種子消費
-    /// </summary>
-    /// <param name="cropDef">作物情報</param>
-    public void UseSeed(SO_CropDefinition cropDef)
-    {
-        if (ResourceManager.Instance.GetSeedCount(cropDef) <= 0)
-        {
-            // 念のためここでも種子の残量確認をする
-            SetSelectedCrop(null);
-            return;
-        }
-
-        ResourceManager.Instance.AddSeed(cropDef, -1);
-        uiManager.UpdateSeedCount(cropDef);
-        if (ResourceManager.Instance.GetSeedCount(cropDef) <= 0)
-        {
-            selectCropDefinition = null;
-            SetSelectedCrop(null);
-        }
-    }
+    #endregion
 
     #region イベント
     /// <summary>
@@ -209,15 +269,6 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ゲームクリア判定
-    /// </summary>
-    /// <returns>true:ゲームクリア false:未クリア</returns>
-    bool IsGameClear()
-    {
-        return dateManager.Year >= endYear && dateManager.Month >= 4;
-    }
-
-    /// <summary>
     /// 所持金更新
     /// </summary>
     void MoneyChanged()
@@ -258,10 +309,10 @@ public class GameManager : MonoBehaviour
     /// 家畜保有量更新
     /// </summary>
     /// <param name="livestockDef">家畜情報</param>
-    void LivestockChanged(SO_LivestockDefinition livestockDef,int value)
+    void LivestockChanged(SO_LivestockDefinition livestockDef, int value)
     {
         uiManager.UpdateLivestockCount(livestockDef);
-        if(value > 0)
+        if (value > 0)
         {
             tileMapManager.SetLivestock(livestockDef, value);
         }
@@ -289,23 +340,6 @@ public class GameManager : MonoBehaviour
         ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
     }
     #endregion
-
-    /// <summary>
-    /// ゲームクリア
-    /// </summary>
-    void GameClear()
-    {
-        ScoreContext context = new ScoreContext
-        {
-            Money = ResourceManager.Instance.Money,
-            FieldCount = ResourceManager.Instance.FieldCount,
-            LivestockArea = ResourceManager.Instance.LivestockAreaCount,
-            IsNeverDebt = ResourceManager.Instance.IsNeverDebt,
-            IsCropOnly = true // 仮
-        };
-        ScoreResult score = scoreManager.CalcScore(context);
-        uiManager.UpdateClearUI(score);
-    }
 
     private void OnDestroy()
     {
