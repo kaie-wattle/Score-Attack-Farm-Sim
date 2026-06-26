@@ -23,10 +23,13 @@ public class GameManager : MonoBehaviour
 
     private SO_CropDefinition selectCropDefinition;
     private int gameOverCount;
+    private GameEventManager gameEventManager;
+    private bool isBumperCrop=false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gameEventManager = new GameEventManager();
         // イベント設定
         dateManager.OnDateChenged += uiManager.UpdateDate;
         tileMapManager.OnPlanted += Planted;
@@ -41,6 +44,10 @@ public class GameManager : MonoBehaviour
         ResourceManager.Instance.OnLivestockInventoryChanged += LivestockChanged;
         ResourceManager.Instance.OnFieldCountChanged += FieldChanged;
         ResourceManager.Instance.OnLivestockAreaCountChanged += LivestockAreaChanged;
+
+        gameEventManager.OnIncomeAdded += IncomeAdded;
+        gameEventManager.OnBumperCrop += BumperCrop;
+        gameEventManager.OnPlague += Plague;
 
         ResourceManager.Instance.AddMoney(initializeMoney);
         ResourceManager.Instance.AddFeed(initializeFeed);
@@ -175,7 +182,6 @@ public class GameManager : MonoBehaviour
         // 収支データ作成
         incomeAndExpensesManager.SaveReportData(dateManager.Year, dateManager.Month);
 
-
         // ゲームエンド判定
         if (IsGameOver())
         {
@@ -186,6 +192,8 @@ public class GameManager : MonoBehaviour
         {
             GameClear();
         }
+
+        isBumperCrop = false;
 
         // ショップ情報更新
         if (dateManager.Month % 3 == 1)
@@ -199,6 +207,8 @@ public class GameManager : MonoBehaviour
         {
             shopButton.SetActive(false);
         }
+
+        gameEventManager.EventCheck(ResourceManager.Instance.GetAllLivestockCount() != 0);
     }
 
     /// <summary>
@@ -253,6 +263,10 @@ public class GameManager : MonoBehaviour
     /// <param name="income">収入</param>
     void IncomeAdded(int income, IncomeType incomeType)
     {
+        if(incomeType == IncomeType.Crop && isBumperCrop)
+        {
+            income *= 2;
+        }
         ResourceManager.Instance.AddMoney(income);
         incomeAndExpensesManager.SetIncomeData(income, incomeType);
     }
@@ -338,6 +352,21 @@ public class GameManager : MonoBehaviour
         shopUIManager.UpdateLivestockStock(tileMapManager.GetFreeLivestockTile());
         //デバッグ用
         ResourceManager.Instance.FreeLivestockAreaCount = tileMapManager.GetFreeLivestockTile();
+    }
+
+    /// <summary>
+    /// 豊作ボーナス
+    /// </summary>
+    void BumperCrop()
+    {
+        isBumperCrop = true;
+    }
+
+    void Plague()
+    {
+        int rand = Random.Range(1, 5);
+        int deathCount = Mathf.Min(rand, ResourceManager.Instance.GetAllLivestockCount());
+        tileMapManager.DieOfDisease(deathCount);
     }
     #endregion
 

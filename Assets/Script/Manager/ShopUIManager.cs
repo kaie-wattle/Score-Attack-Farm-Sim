@@ -34,7 +34,7 @@ public class ShopUIManager : MonoBehaviour
         foreach (var crop in cropDefinitionList)
         {
             var button = Instantiate(shopButtonSeedItemPrefabs, shopSeedButtonParent.transform);
-            int stock = Random.Range(5, 30);
+            int stock = Random.Range(5, 31);
             button.SetShopItemButton(stock, crop);
             button.OnExpensed += OnExpensed;
             shopSeedButtons.Add(button);
@@ -42,7 +42,7 @@ public class ShopUIManager : MonoBehaviour
 
         // â∆í{è§ïiÉäÉXÉg
         var feedButton = Instantiate(shopButtonFeedItemPrefabs, shopLivestockButtonParent.transform);
-        int feedStock = Random.Range(1, 6) * 500;
+        int feedStock = Random.Range(1, 7) * 500;
         feedButton.SetShopItemButton(feedStock);
         feedButton.OnExpensed += OnExpensed;
         shopFeedButtons.Add(feedButton);
@@ -113,7 +113,7 @@ public class ShopUIManager : MonoBehaviour
     {
         foreach (var button in shopSeedButtons)
         {
-            int stock = Random.Range(5, 30);
+            int stock = Random.Range(5, 31);
             button.UpdateStock(stock);
             button.ResetBuyCount();
         }
@@ -138,7 +138,7 @@ public class ShopUIManager : MonoBehaviour
     {
         foreach (var button in shopFeedButtons)
         {
-            int stock = Random.Range(1, 6) * 500;
+            int stock = Random.Range(1, 7) * 500;
             button.UpdateStock(stock);
             button.ResetBuyCount();
         }

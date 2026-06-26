@@ -10,6 +10,7 @@ public enum IncomeType
 {
     Crop,
     Livestock,
+    Bonus,
 }
 
 /// <summary>
@@ -34,6 +35,7 @@ public class IncomeAndExpensesManager : MonoBehaviour
     [SerializeField] TMPro.TMP_Text IncomeTitleText;
     [SerializeField] TMPro.TMP_Text CropIncomeText;
     [SerializeField] TMPro.TMP_Text LivestockIncomeText;
+    [SerializeField] TMPro.TMP_Text BonusIncomeText;
     [SerializeField] TMPro.TMP_Text ShopExpenseText;
     [SerializeField] TMPro.TMP_Text SeedstockExpenseText;
     [SerializeField] TMPro.TMP_Text LandExpenseText;
@@ -45,6 +47,7 @@ public class IncomeAndExpensesManager : MonoBehaviour
         public int month;
         public int cropIncome;
         public int livestockIncome;
+        public int bonusIncome;
         public int shopExpense;
         public int seedStockExpense;
         public int landExpense;
@@ -56,6 +59,7 @@ public class IncomeAndExpensesManager : MonoBehaviour
     int currentReportPage;
     int currentCropIncome;
     int currentLivestockIncome;
+    int currentBonusIncome;
 
     int currentShopExpense;
     int currentSeedStockExpense;
@@ -77,6 +81,9 @@ public class IncomeAndExpensesManager : MonoBehaviour
                 break;
             case IncomeType.Livestock:
                 currentLivestockIncome += value;
+                break;
+            case IncomeType.Bonus:
+                currentBonusIncome += value;
                 break;
             default:
                 break;
@@ -137,6 +144,7 @@ public class IncomeAndExpensesManager : MonoBehaviour
         currentReport.month = month;
         currentReport.cropIncome = currentCropIncome;
         currentReport.livestockIncome = currentLivestockIncome;
+        currentReport.bonusIncome = currentBonusIncome;
         currentReport.shopExpense = currentShopExpense;
         currentReport.seedStockExpense = currentSeedStockExpense;
         currentReport.landExpense = currentLandExpense;
@@ -146,6 +154,7 @@ public class IncomeAndExpensesManager : MonoBehaviour
 
         currentCropIncome = 0;
         currentLivestockIncome = 0;
+        currentBonusIncome = 0;
         currentShopExpense = 0;
         currentSeedStockExpense = 0;
         currentLandExpense = 0;
@@ -169,6 +178,7 @@ public class IncomeAndExpensesManager : MonoBehaviour
 
         CropIncomeText.SetText(currentReport.cropIncome.ToString());
         LivestockIncomeText.SetText(currentReport.livestockIncome.ToString());
+        BonusIncomeText.SetText(currentReport.bonusIncome.ToString());
         ShopExpenseText.SetText(currentReport.shopExpense.ToString());
         SeedstockExpenseText.SetText(currentReport.seedStockExpense.ToString());
         LandExpenseText.SetText(currentReport.landExpense.ToString());

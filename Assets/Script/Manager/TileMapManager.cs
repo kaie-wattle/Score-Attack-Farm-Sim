@@ -274,7 +274,7 @@ public class TileMapManager : MonoBehaviour
             else
             {
                 // û“üŒvZ
-                int rand = Random.Range(-20, 50);
+                int rand = Random.Range(-20, 51);
                 int dirtinessPenalty = (ResourceManager.Instance.Dirtiness / 50);
                 float incomeRate = (100 + rand - dirtinessPenalty) / 100f;
                 incomeRate = Mathf.Max(incomeRate, 0.1f);
@@ -410,6 +410,36 @@ public class TileMapManager : MonoBehaviour
         return ret;
     }
 
+    /// <summary>
+    /// •a€ˆ—
+    /// </summary>
+    /// <param name="deathCount"></param>
+    public void DieOfDisease(int deathCount)
+    {
+        int count = 0;
+        foreach (var cell in livestockCells.Values)
+        {
+            if (cell.livestockData == null)
+            {
+                continue;
+            }
+            SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
+
+            Debug.Log("‰Æ’{‚ª‰ì€‚µ‚Ü‚µ‚½B");
+            cell.livestockData = null;
+            livestockMap.SetTile(cell.cellPos, glassTile);
+            ResourceManager.Instance.AddLivestock(definition, -1);
+            count++;
+            if(count >= deathCount)
+            {
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// ‰Æ’{”„‹pƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
+    /// </summary>
     public void OnSellLivestock()
     {
         sellFlag = !sellFlag;
@@ -425,6 +455,9 @@ public class TileMapManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ‘|œƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
+    /// </summary>
     public void OnCleaning()
     {
         int cost = (cleaningCost * ResourceManager.Instance.Dirtiness) + MinCleaningCost;

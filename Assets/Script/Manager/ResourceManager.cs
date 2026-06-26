@@ -52,7 +52,6 @@ public class ResourceManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>
