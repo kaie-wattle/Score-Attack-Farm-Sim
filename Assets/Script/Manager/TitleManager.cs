@@ -3,6 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
+
+    public void OnOneYearStartButton() => OnGameStartButton(1);
+    public void OnThreeYearStartButton() => OnGameStartButton(3);
+    public void OnFiveYearStartButton() => OnGameStartButton(5);
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,8 +20,9 @@ public class TitleManager : MonoBehaviour
 
     }
 
-    public void OnGameStartButton()
+    void OnGameStartButton(int playYear)
     {
+        PlaySettings.PlayYears = playYear;
         SceneManager.LoadScene("MainScene");
     }
 

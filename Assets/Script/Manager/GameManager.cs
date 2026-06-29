@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
 
         TileMapChanged(LandType.Farmland);
         shopButton.SetActive(true);
+        endYear = PlaySettings.PlayYears;
     }
 
     // Update is called once per frame
@@ -117,7 +118,7 @@ public class GameManager : MonoBehaviour
     /// <returns>true:ゲームクリア false:未クリア</returns>
     bool IsGameClear()
     {
-        return dateManager.Year >= endYear && dateManager.Month >= 4;
+        return dateManager.Year > endYear && dateManager.Month >= 4;
     }
 
     /// <summary>
