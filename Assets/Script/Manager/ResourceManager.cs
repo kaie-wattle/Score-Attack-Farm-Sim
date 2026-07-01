@@ -231,6 +231,7 @@ public class ResourceManager : MonoBehaviour
 
     /// <summary> 空畜産面積 </summary>
     public int FreeLivestockAreaCount { get; set; }
+#if UNITY_EDITOR
     /// <summary>
     /// TODO:デバッグ用
     /// </summary>
@@ -254,4 +255,5 @@ public class ResourceManager : MonoBehaviour
         GUILayout.Label("AllLivestockCount:" + GetAllLivestockCount().ToString(), myStyle);
         GUILayout.Label("FreeLivestockAreaCount:" + FreeLivestockAreaCount.ToString(), myStyle);
     }
+#endif
 }

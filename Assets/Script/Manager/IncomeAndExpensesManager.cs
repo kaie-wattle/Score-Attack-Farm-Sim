@@ -27,8 +27,8 @@ public enum ExpenseType
 public class IncomeAndExpensesManager : MonoBehaviour
 {
     [SerializeField] GameObject ViewButon;
-    [SerializeField] Button NextButon;
-    [SerializeField] Button PrevButon;
+    [SerializeField] Button NextButton;
+    [SerializeField] Button PrevButton;
     [Header("-----------ViewItem-----------")]
     [SerializeField] TMPro.TMP_Text yearText;
     [SerializeField] TMPro.TMP_Text monthText;
@@ -190,21 +190,21 @@ public class IncomeAndExpensesManager : MonoBehaviour
         if (currentReportPage <= 0)
         {
             currentReportPage = 0;
-            NextButon.interactable = false;
+            NextButton.interactable = false;
         }
         else
         {
-            NextButon.interactable = true;
+            NextButton.interactable = true;
         }
 
         if (currentReportPage >= monthlyReports?.Count - 1)
         {
             currentReportPage = monthlyReports.Count - 1;
-            PrevButon.interactable = false;
+            PrevButton.interactable = false;
         }
         else
         {
-            PrevButon.interactable = true;
+            PrevButton.interactable = true;
         }
     }
 

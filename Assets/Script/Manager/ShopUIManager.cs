@@ -84,7 +84,7 @@ public class ShopUIManager : MonoBehaviour
     /// </summary>
     public void UpdateMoney()
     {
-        moneyText.SetText(ResourceManager.Instance.Money.ToString());
+        moneyText.SetText(ResourceManager.Instance.Money.ToString() + "‰~");
         foreach (var button in shopSeedButtons)
         {
             button.UpdateInteractable();
