@@ -23,10 +23,11 @@ public class TutorialPopup : PopupBase<TutorialPopup>
 
     void ShowPopup(SO_TutorialCategory tutorialDef)
     {
-        window.SetActive(true);
+        currentPage = 0;
         currentTutorialDef = tutorialDef;
         
         UpdateView();
+        window.SetActive(true);
     }
 
     void UpdateView()

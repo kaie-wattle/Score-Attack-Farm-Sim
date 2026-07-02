@@ -15,6 +15,6 @@ MonoBehaviour:
   cropType: 2
   cropName: "\u5C0F\u9EA6"
   cropPrice: 120
-  growMonths: 2
-  sellPrice: 200
+  growMonths: 3
+  sellPrice: 300
   cropTile: {fileID: 11400000, guid: bcede4101c84028409abde06b6adcd0e, type: 2}

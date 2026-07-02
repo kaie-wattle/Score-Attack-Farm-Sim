@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO_CropDefinition
   cropType: 4
   cropName: "\u305F\u307E\u306D\u304E"
-  cropPrice: 40
-  growMonths: 2
-  sellPrice: 90
+  cropPrice: 100
+  growMonths: 4
+  sellPrice: 400
   cropTile: {fileID: 11400000, guid: ac023aa683e0e364a91e17d9c5969dd6, type: 2}

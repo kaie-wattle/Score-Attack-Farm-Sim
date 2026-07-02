@@ -2,20 +2,34 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void OnCloseButton()
     {
-        
+        gameObject.SetActive(false);
     }
 
     public void OnIntroductionButton()
     {
         TutorialPopup.instance.ShowCategory(TutorialType.Introduction);
+    }
+
+    public void OnFarmingButton()
+    {
+        TutorialPopup.instance.ShowCategory(TutorialType.Farming);
+    }
+
+    public void OnLivestockButton()
+    {
+        TutorialPopup.instance.ShowCategory(TutorialType.Livestock);
+    }
+
+    public void OnShopButton()
+    {
+        TutorialPopup.instance.ShowCategory(TutorialType.Shop);
+    }
+
+    public void OnGameEventButton()
+    {
+        TutorialPopup.instance.ShowCategory(TutorialType.GameEvent);
     }
 }
