@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
+    public void TutorialActive()
+    {
+        gameObject.SetActive(true);
+    }
 
     public void OnCloseButton()
     {

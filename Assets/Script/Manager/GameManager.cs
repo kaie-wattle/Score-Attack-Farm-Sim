@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] MaintenanceManager maintenanceManager;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] ShopUIManager shopUIManager;
+    [SerializeField] TutorialManager tutorialManager;
     [Header("---------------------------")]
     [SerializeField] int endYear;
     [SerializeField] int initializeMoney = 500;
@@ -226,6 +227,14 @@ public class GameManager : MonoBehaviour
     public void OnShopViewButton()
     {
         shopUIManager.ShopActive();
+    }
+
+    /// <summary>
+    /// チュートリアル表示ボタン押下処理
+    /// </summary>
+    public void OnTutorialViewButton()
+    {
+        tutorialManager.TutorialActive();
     }
     #endregion
 
