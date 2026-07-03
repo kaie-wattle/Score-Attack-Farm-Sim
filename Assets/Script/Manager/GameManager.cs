@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
@@ -188,11 +189,13 @@ public class GameManager : MonoBehaviour
         if (IsGameOver())
         {
             GameOver();
+            return;
         }
 
         if (IsGameClear())
         {
             GameClear();
+            return;
         }
 
         isBumperCrop = false;
@@ -235,6 +238,26 @@ public class GameManager : MonoBehaviour
     public void OnTutorialViewButton()
     {
         tutorialManager.TutorialActive();
+    }
+
+    /// <summary>
+    /// ゲーム終了ボタン押下処理
+    /// </summary>
+    public void OnGameEndButton()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    /// <summary>
+    /// タイトルボタン押下処理
+    /// </summary>
+    public void OnTitleBackButton()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
     #endregion
 
