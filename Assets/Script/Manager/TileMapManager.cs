@@ -231,7 +231,7 @@ public class TileMapManager : MonoBehaviour
                 continue;
             }
             SO_LivestockDefinition definition = cell.livestockData.so_LivestockDefinition;
-            int dirtiness = Random.Range(1, 5);
+            int dirtiness = Random.Range(10, 31);
             totalDirtiness += dirtiness;
 
             // ‰a‚ª‚È‚¢ê‡‚Í‰Æ’{‚ª‰ì€‚·‚é

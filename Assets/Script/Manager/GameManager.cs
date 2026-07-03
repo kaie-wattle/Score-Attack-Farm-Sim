@@ -62,13 +62,6 @@ public class GameManager : MonoBehaviour
         shopUIManager.Initialize(cropDefinitionList, livestockDefinitionList, landDefinitionList, tileMapManager.GetFreeLivestockTile(), ExpenseAdded);
         incomeAndExpensesManager.Initialize();
 
-        foreach (var cropDef in cropDefinitionList)
-        {
-            // TODO:デバッグ用
-            ResourceManager.Instance.AddSeed(cropDef, 5);
-            uiManager.UpdateSeedCount(cropDef);
-        }
-
         TileMapChanged(LandType.Farmland);
         shopButton.SetActive(true);
         endYear = PlaySettings.PlayYears;

@@ -16,7 +16,7 @@ MonoBehaviour:
   livestockName: "\u7F8A"
   livestockPrice: 2000
   growMonths: 0
-  animalProductPrice: 200
+  animalProductPrice: 600
   sellPrice: 800
   feedConsumption: 8
   isAutoSold: 0
