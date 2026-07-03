@@ -40,7 +40,7 @@ public class ResourceManager : MonoBehaviour
     private Dictionary<SO_CropDefinition, int> seedInventory = new Dictionary<SO_CropDefinition, int>();
     /// <summary> â∆í{ï€óLêî </summary>
     private Dictionary<SO_LivestockDefinition, int> livestockInventory = new Dictionary<SO_LivestockDefinition, int>();
-    private bool isNeverDebt;
+    private bool isNeverDebt = true;
     private bool isFieldMax;
     private bool isLivestockAreaMax;
 

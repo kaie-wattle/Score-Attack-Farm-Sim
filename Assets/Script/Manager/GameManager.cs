@@ -134,7 +134,9 @@ public class GameManager : MonoBehaviour
             FieldCount = ResourceManager.Instance.FieldCount,
             LivestockArea = ResourceManager.Instance.LivestockAreaCount,
             IsNeverDebt = ResourceManager.Instance.IsNeverDebt,
-            IsCropOnly = true // ‰¼
+            IsCropOnly = ResourceManager.Instance.LivestockAreaCount == 0 && ResourceManager.Instance.FieldCount >= 1,
+            IsLivestockOnly = ResourceManager.Instance.FieldCount == 0 && ResourceManager.Instance.LivestockAreaCount >= 1,
+            IsLandMax = ResourceManager.Instance.IsFieldMax && ResourceManager.Instance.IsLivestockAreaMax,
         };
         ScoreResult score = scoreManager.CalcScore(context);
         uiManager.ShowClearUI(score);

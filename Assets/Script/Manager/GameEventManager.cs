@@ -24,7 +24,7 @@ public class GameEventManager
     {
         eventDataList = new List<RandomEventData>
         {
-            new RandomEventData{ minRange = 90,action = () => OnGameEventGetLottery() },
+            new RandomEventData{ minRange = 98,action = () => OnGameEventGetLottery() },
             new RandomEventData{ minRange = 70,action = () => OnGameEventBumperCrop() },
             new RandomEventData{ minRange = 10,action = () => OnGameEventPlague() }
         };

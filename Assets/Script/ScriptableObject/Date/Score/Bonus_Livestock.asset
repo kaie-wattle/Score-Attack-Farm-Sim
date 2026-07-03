@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6586f7fc80abc1c45a4079615b700be5, type: 3}
-  m_Name: Bonus_CropOnly
-  m_EditorClassIdentifier: Assembly-CSharp::SO_CropOnlyBonus
-  bonusName: "\u8015\u4F5C\u306E\u307F"
-  bonusValue: 5000
+  m_Script: {fileID: 11500000, guid: 9b5c4c1f7f409294488e1f54971a8ace, type: 3}
+  m_Name: Bonus_Livestock
+  m_EditorClassIdentifier: Assembly-CSharp::SO_LivestockOnlyBonus
+  bonusName: "\u755C\u7523\u306E\u307F"
+  bonusValue: 10000

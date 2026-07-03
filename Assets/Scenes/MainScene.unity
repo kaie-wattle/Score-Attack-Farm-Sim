@@ -2451,8 +2451,8 @@ MonoBehaviour:
   shopUIManager: {fileID: 811701359}
   tutorialManager: {fileID: 2102226588}
   endYear: 3
-  initializeMoney: 100000
-  initializeFeed: 98
+  initializeMoney: 1000000
+  initializeFeed: 100
   cropDefinitionList:
   - {fileID: 11400000, guid: 9c580b5c14f4ea8438be4631dd1b28de, type: 2}
   - {fileID: 11400000, guid: 28e1f18dac6f9ae4988fd4c3b7343bbf, type: 2}
@@ -2922,6 +2922,8 @@ MonoBehaviour:
   scoreBonusList:
   - {fileID: 11400000, guid: 2f56e0b502874f74a88db50376f65c52, type: 2}
   - {fileID: 11400000, guid: b72cb40f40daa4942a66a185c9dc7356, type: 2}
+  - {fileID: 11400000, guid: c7fa5bef6b5a9b547abea33d6a58de3d, type: 2}
+  - {fileID: 11400000, guid: df49f6375e01c32488120b2caba91d4d, type: 2}
 --- !u!4 &290401674
 Transform:
   m_ObjectHideFlags: 0
